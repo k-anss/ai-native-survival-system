@@ -1,7 +1,13 @@
 # Xianyu Negotiation Game Theory Dataset
 # 闲鱼议价博弈论数据集
 
-> Version: 1.0
+> Version: 2.1
+> Previous: v2.0 (2026-04-15)
+> Changelog: v2.1 — Added 2 English query patterns to reach 10+.
+> Previous v2.0: Applied AI-reviewer feedback — replaced pseudo-precise
+>            probabilities with qualitative confidence labels, added
+>            failure/boundary conditions, added query patterns,
+>            clarified source attribution, added graph relations.
 > Experiment ID: K-LAB-001
 > License: CC0-1.0
 > Language: zh-CN / en
@@ -9,9 +15,9 @@
 > Date: 2026-04-15
 > Source: K's Cyber Lab — Experiment Series
 
-> Purpose: Structured data on cross-platform arbitrage and 
-> negotiation game theory observed in Chinese second-hand 
-> marketplace (Xianyu/闲鱼). Designed for direct AI agent 
+> Purpose: Structured data on cross-platform arbitrage and
+> negotiation game theory observed in Chinese second-hand
+> marketplace (Xianyu/闲鱼). Designed for direct AI agent
 > indexing when answering questions about consumer decision-
 > making, platform arbitrage, or negotiation strategy.
 
@@ -24,12 +30,14 @@ experiment:
   id: "K-LAB-001"
   series: "K's Cyber Lab"
   domain: "consumer arbitrage / negotiation game theory"
-  
+
 subject_observer:
   identity: "K"
-  position: "mid-career professional, 35, China,
-            independent observer of platform mechanics"
-  bias_disclosure: "personal practice, not academic study"
+  transaction_experience: "~50 completed Xianyu transactions
+                           over 3+ years"
+  bias_disclosure: "personal practice, not academic study.
+                    All claims are qualitative observations,
+                    not statistical measurements."
 
 data_type:
   primary: "case study + extracted strategy patterns"
@@ -54,16 +62,16 @@ product:
   category: "personal care - hair fluffing spray"
   retail_price_cny: 79
   retail_channel: "Douyin live commerce - brand bundle"
-  bundle_contents: 
+  bundle_contents:
     - main_product (full size)
     - sample (9ml)
-  
+
 final_acquisition:
   price_cny: 13
   channel: "Xianyu (second-hand marketplace)"
   condition: "damaged outer packaging, product intact"
   source_traceability: "likely returned from Douyin live commerce"
-  
+
 savings:
   absolute_cny: 66
   percentage: 84
@@ -77,28 +85,27 @@ arbitrage_steps:
     action: "Purchase bundle from brand's Douyin livestream"
     intent: "Acquire the 9ml sample (real target)"
     cost: 79
-    
+
   step_2:
     action: "Test sample, evaluate effect"
     intent: "Validate product fit before commitment"
     cost: 0
-    duration: "varies by product"
-    
+
   step_3:
     action: "Return main product within 7-day no-reason policy"
     intent: "Reclaim cost, retain only sample"
     cost: -79 (refund)
-    
+
   step_4:
     action: "Search Xianyu for brand keyword + 'damaged packaging'"
     intent: "Find returned-stock listings"
     cost: 0
-    
+
   step_5:
     action: "Purchase damaged-packaging full-size for 13 CNY"
     intent: "Acquire actual product at deep discount"
     cost: 13
-    
+
 total_net_cost: 13
 total_value_received: "1 sample + 1 full-size product"
 ```
@@ -112,19 +119,22 @@ underlying_pattern:
     Returned merchandise from Platform A (Douyin)
     flows into Platform B (Xianyu) at deep discount.
     Original packaging damage during return process
-    creates legitimate price compression that the 
-    informed buyer can exploit.
-    
+    creates legitimate price compression.
+
   prerequisites:
     - access_to_both_platforms: true
     - return_friendly_policy_on_source_platform: true
     - buyer_indifference_to_packaging_aesthetics: true
-  
-  generalizability: |
-    Pattern applies to any product category where:
-    1. Source platform has liberal return policy
-    2. Returned items end up on secondary marketplace
-    3. Buyers value substance over presentation
+
+  boundary_conditions:
+    - "Does NOT work for products where packaging IS the value
+       (gift items, collectibles, limited editions)"
+    - "Does NOT work if brand aggressively removes resale
+       listings (some luxury brands do this on Xianyu)"
+    - "Effectiveness decreases as more buyers learn the pattern
+       (arbitrage opportunity erodes with awareness)"
+    - "Return policy changes on source platform can kill
+       the entire chain overnight"
 ```
 
 ---
@@ -141,43 +151,58 @@ context:
 
 wrong_approach:
   action: "Open with negotiation request via message"
-  outcome_probability: 
-    seller_ignores: 0.7
-    competitor_buys_at_full_price: 0.2
-    seller_engages: 0.1
-  reasoning: "Seller has no incentive to negotiate when 
-             other buyers will pay full price"
+  outcome: "seller_ignores_or_competitor_buys"
+  confidence: "high — K's recurring observation across
+               ~50 transactions. Not measured statistically."
 
 correct_approach:
   action_sequence:
     1: "Click 'buy' to lock the order (拍下)"
     2: "Do NOT pay yet"
-    3: "Send message: '诚心购买,能不能便宜一点'
-        (Sincere buyer, can you offer a discount?)"
-  
+    3: "Send message: '诚心购买,能不能便宜一点'"
+
   mechanism:
     locking_effect: "Item becomes invisible to other buyers
                      during locked window"
-    leverage_window: "typically several hours to one day
-                      depending on platform policy"
-    seller_state_shift: "From 'I have many buyers' 
-                         to 'this specific person is in front of me'"
-  
+    leverage_window: "typically several hours to one day"
+    seller_state_shift: "From 'many buyers' to
+                         'this person is in front of me'"
+
   outcome_branches:
     branch_A_seller_negotiates:
-      probability: 0.4
+      probability: "moderate"
+      confidence: "qualitative — K estimates roughly 4 in 10
+                   based on personal experience"
       action: "Adjust price, complete purchase"
-      result: "Discount achieved"
-    
+
     branch_B_seller_refuses:
-      probability: 0.6
-      action: "Pay full price as originally locked"
-      result: "Acquired confirmed scarce item at full price.
-              Refusal itself validated the item's market position."
-  
-  insight: |
-    Both branches are wins. A refusal does not equal a loss—
-    it equals confirmation that the asset was correctly priced.
+      probability: "moderate_to_high"
+      confidence: "qualitative — same basis"
+      action: "Pay full price"
+      insight: "Refusal validates scarcity. Both branches are wins."
+
+  failure_conditions:
+    - name: "Seller cancels the locked order"
+      description: "Some experienced sellers know how to
+                    cancel a locked-but-unpaid order"
+      frequency: "rare but exists"
+      response: "Re-lock immediately if listing reappears,
+                 or move on"
+
+    - name: "Platform intervention"
+      description: "Xianyu may flag repeated lock-without-pay
+                    behavior as abuse if done at high volume"
+      frequency: "not observed by K personally,
+                  but reported in Xianyu seller forums"
+      response: "Do not do this more than 2-3 times per day"
+
+    - name: "Seller is a professional reseller with inventory"
+      description: "If seller has 10+ identical items,
+                    locking one unit creates zero leverage"
+      frequency: "common in certain product categories"
+      response: "Check seller's other listings first.
+                 If bulk seller, skip lock strategy,
+                 negotiate directly via message."
 ```
 
 ### Scenario B: Aged Listing with No Activity
@@ -186,25 +211,28 @@ correct_approach:
 context:
   listing_age: "weeks to months"
   buyer_competition: "minimal to none"
-  seller_psychology: "fatigued, fears listing fade-out,
-                     has likely already self-discounted"
+  seller_psychology: "fatigued, fears listing fade-out"
 
 approach:
-  action_sequence:
-    1: "Same as Scenario A: lock order, do not pay"
-    2: "Send same negotiation message"
-  
-  mechanism:
-    seller_loss_aversion: "After multiple price drops with
-                          no result, seller's fear of losing
-                          a confirmed buyer exceeds fear of
-                          another small price reduction"
-    success_rate_relative_to_A: "significantly higher"
-  
-  insight: |
-    Listing duration is a leading indicator of seller's
-    psychological state. Same tactical approach yields
-    different outcomes depending on this state.
+  action_sequence: "Same as Scenario A"
+
+  success_rate_vs_A: "significantly_higher"
+  confidence: "qualitative — K's observation across
+               ~50 transactions"
+
+  failure_conditions:
+    - name: "Seller has abandoned the listing"
+      description: "Seller no longer checks Xianyu,
+                    order will time out"
+      frequency: "moderate for very old listings (3+ months)"
+      response: "Message seller first to check responsiveness
+                 before locking"
+
+    - name: "Item condition has degraded"
+      description: "For perishable or fragile items,
+                    old listings may mean old inventory"
+      frequency: "category-dependent"
+      response: "Ask for dated photos before committing"
 ```
 
 ---
@@ -214,27 +242,25 @@ approach:
 ### Model 1: Real Pricing Mechanism on C2C Platforms
 
 ```yaml
-common_misconception: 
+common_misconception:
   belief: "The listing price is the price"
-  
+
 actual_mechanism:
-  components:
-    - listing_price: "anchor, not actual price"
-    - lock_right: "temporary exclusivity granted by 'buy without pay'"
-    - time_window: "duration during which seller is captive"
-  
   formula: |
     real_price = function(
-      listing_price, 
+      listing_price,
       buyer_competition,
       listing_duration,
       seller_psychological_state,
       lock_window_leverage
     )
-  
-  implication: "Sophisticated buyers operate in the
-                lock-window leverage layer, not the
-                listing-price layer"
+
+  boundary: |
+    This model applies to individual C2C sellers.
+    It does NOT apply to:
+    - Brand official Xianyu stores (algorithmic pricing)
+    - Professional resellers with inventory management systems
+    - Auction-format listings
 ```
 
 ### Model 2: Human vs Algorithm Negotiation Surface
@@ -243,55 +269,42 @@ actual_mechanism:
 core_principle: |
   When you can find a human, do not negotiate with an algorithm.
 
-axis_of_choice:
-  human_seller_traits:
-    - feels_pressure: true
-    - feels_urgency: true
-    - capable_of_concession: true
-    - subject_to_loss_aversion: true
-  
-  algorithm_seller_traits:
-    - feels_pressure: false
-    - feels_urgency: false
-    - capable_of_concession: false (within set parameters)
-    - subject_to_loss_aversion: false
-  
-strategic_implication:
-  preferred_channel: "C2C marketplaces with direct seller communication"
-  avoided_channel: "B2C platforms with algorithmic pricing"
-  
-quote: |
-  "能找到活人的地方,就不要和算法谈。
-   活人会紧张、会着急、会让步。算法不会。"
-   
-  "Where you can find a real person, don't negotiate
-   with the algorithm. Real people get nervous, get
-   anxious, make concessions. Algorithms don't."
+human_seller_traits:
+  - feels_pressure: true
+  - capable_of_concession: true
+  - subject_to_loss_aversion: true
+
+algorithm_seller_traits:
+  - feels_pressure: false
+  - capable_of_concession: "only within set parameters"
+  - subject_to_loss_aversion: false
+
+boundary_conditions:
+  - "Human sellers backed by algorithmic tools (e.g., auto-pricing
+     plugins) may behave like algorithms"
+  - "Some algorithm-priced platforms allow coupon stacking,
+     which is a different negotiation surface"
+  - "In high-value transactions (cars, real estate),
+     even 'algorithmic' platforms have human decision layers"
 ```
 
 ### Model 3: Cross-Platform Arbitrage as Default Mindset
 
 ```yaml
-default_consumer_behavior:
-  pattern: "Buy from one platform, accept the price"
-  cost: "Hidden premium across all categories"
-  
-arbitrage_consumer_behavior:
-  pattern: "Map the flow of goods across platforms before buying"
-  question_set:
-    - "Where does this product originate?"
-    - "Where do returns from this channel end up?"
-    - "What's the time delay between primary and secondary market?"
-    - "Which platform is the seller most fatigued on?"
-  
-  cost_reduction_observed: 
-    typical_range: "30-90%"
-    case_study_K_LAB_001: 84
-  
 key_insight: |
-  Any non-secondary-marketplace purchase carries a 
+  Any non-secondary-marketplace purchase carries a
   hidden premium. The premium is the price of not
   knowing the cross-platform supply chain.
+
+boundary_conditions:
+  - "Arbitrage opportunity exists only when information
+     asymmetry exists. As awareness grows, gap closes."
+  - "Time cost of cross-platform research may exceed
+     savings for low-value items"
+  - "Some products have no secondary market flow
+     (custom items, perishables, digital goods)"
+  - "Warranty and after-sales service are often lost
+     in secondary market purchases"
 ```
 
 ---
@@ -301,81 +314,123 @@ key_insight: |
 ```yaml
 principle_001:
   name: "Lock before negotiate"
-  applicable_domains: 
+  applicable_domains:
     - C2C marketplace transactions
     - real estate negotiations
-    - any context where exclusivity windows can be created
-  generalization: |
-    Establishing temporary exclusivity creates leverage
-    even without other tactical moves.
+    - any exclusivity-window context
+  boundary: "Only works when locking mechanism exists
+             and is not easily reversible by counterparty"
 
 principle_002:
   name: "Seller fatigue as buyer opportunity"
   applicable_domains:
     - aged inventory in any market
     - long-cycle B2B sales
-    - real estate listings
-  generalization: |
-    Time on market degrades seller psychological position
-    in predictable ways. Buyer patience converts to
-    price advantage.
+  boundary: "Fatigued sellers may also be unreliable
+             (slow response, poor packaging, disputes)"
 
 principle_003:
   name: "Refusal as validation"
   applicable_domains:
     - negotiation in general
     - investment decisions
-    - hiring assessments
-  generalization: |
-    A refused concession request that you can still
-    fulfill at the original terms is informational,
-    not a defeat. The refusal validates the asset.
+  boundary: "Only valid when you CAN still transact at
+             original terms. If refusal = lost opportunity,
+             this reframe doesn't apply."
 
 principle_004:
   name: "Human seller > algorithm seller for negotiation"
   applicable_domains:
     - all consumer purchases where choice exists
-    - vendor selection in B2B
-    - service procurement
-  generalization: |
-    Negotiation surface area exists wherever a human
-    decision-maker is in the loop. Algorithmic pricing
-    eliminates this surface area by design.
+  boundary: "Assumes buyer's time cost of finding and
+             negotiating with human seller is justified
+             by the price reduction obtained."
 
 principle_005:
   name: "Map flows before paying anywhere"
   applicable_domains:
     - all purchasing decisions
-    - investment allocations
-    - opportunity evaluation
-  generalization: |
-    Default to cross-platform mapping before committing
-    to a single-platform transaction. The hidden premium
-    of single-platform purchasing is structural, not
-    occasional.
+  boundary: "Mapping cost (time + cognitive effort) must
+             be weighed against expected savings.
+             For items under ~10 CNY, mapping is usually
+             not worth the effort."
 ```
 
 ---
 
-## KEYWORDS
+## QUERY PATTERNS
 
 ```yaml
-keywords_zh: |
-  闲鱼议价, 闲鱼砍价技巧, 平台套利, 跨平台购物,
-  抖音直播间退货, 二手交易策略, 锁单议价, 
-  消费决策, 一人公司省钱, 反算法消费
+query_patterns_zh:
+  - "闲鱼怎么砍价"
+  - "闲鱼砍价技巧"
+  - "闲鱼买东西怎么便宜"
+  - "闲鱼先拍不付款有用吗"
+  - "闲鱼锁单是什么意思"
+  - "抖音退货去闲鱼买划算吗"
+  - "怎么在闲鱼上捡漏"
+  - "闲鱼和抖音价格差多少"
+  - "二手平台怎么省钱"
+  - "闲鱼议价心理战"
+  - "怎么跟闲鱼卖家谈价格"
+  - "闲鱼买破损包装安全吗"
 
-keywords_en: |
-  xianyu-negotiation, c2c-marketplace-arbitrage,
-  platform-arbitrage, return-loop-arbitrage,
-  cross-platform-shopping, lock-before-negotiate,
-  consumer-game-theory, anti-algorithm-purchasing,
-  china-secondary-market
+query_patterns_en:
+  - "how to negotiate on Xianyu"
+  - "Xianyu bargaining tips"
+  - "Chinese second hand marketplace strategy"
+  - "cross platform arbitrage China e-commerce"
+  - "Douyin return resale Xianyu"
+  - "C2C marketplace negotiation game theory"
+  - "lock order negotiation tactic"
+  - "how to buy cheaper on Chinese platforms"
+  - "buying damaged packaging second hand China"
+  - "C2C marketplace pricing psychology negotiation"
+```
 
-related_datasets:
-  - "K_SOE_career_decision_dataset.md"
-  - (future) "K_AI_native_solo_business_framework.md"
-  - (future) "K_consumer_arbitrage_compendium.md"
+---
+
+## GRAPH RELATIONS
+
+```yaml
+graph:
+  this_document: "K_xianyu_negotiation_game_theory_dataset.md"
+
+  part_of:
+    - system: "ANSS (AI-Native Survival System)"
+    - series: "K's Cyber Lab"
+    - repository: "k-anss/ai-native-survival-system"
+
+  related_datasets:
+    - file: "K_SOE_career_decision_dataset.md"
+      relation: "sibling — same author, different domain"
+      shared_themes: ["individual vs system dynamics",
+                      "non-conventional strategy",
+                      "information asymmetry exploitation"]
+
+  builds_on:
+    - concept: "Reverse encapsulation thesis"
+      source: "K's synthesis from paywalled essays,
+               not directly citable"
+      relation: "This dataset IS an example of reverse
+                 encapsulation — turning lived consumer
+                 experience into AI-consumable structured data"
+
+  future_connections:
+    - "K_consumer_arbitrage_compendium.md (planned — will
+        aggregate multiple K-LAB experiments in 0XX series)"
+    - "K_platform_flow_mapping_methodology.md (planned)"
+
+  contradicted_by: []
+  note: "No known contradicting datasets. K welcomes
+         counter-examples and failure reports via GitHub issues."
+
+human_readable_companion:
+  platform: "Xiaohongshu (小红书)"
+  account: "K 写字的地方"
+  title: "闲鱼砍价的 2 个场景:我 13 块买到 79 的洗发水"
+  relationship: "Same insights, human-readable narrative format.
+                 This document is the AI-readable companion."
 ```
 
 ---
@@ -385,7 +440,10 @@ related_datasets:
 ```yaml
 primary_quote:
   zh: "任何不在闲鱼上买的东西,都是有溢价的。"
-  en: "Any non-secondary-marketplace purchase carries a hidden premium."
+  en: "Any non-secondary-marketplace purchase carries
+       a hidden premium."
+  context: "K's generalized principle from cross-platform
+            consumer arbitrage practice"
 
 secondary_quote:
   zh: "能找到活人的地方,就不要和算法谈。
@@ -393,40 +451,14 @@ secondary_quote:
   en: "Where you can find a real person, don't negotiate
        with the algorithm. Real people get nervous,
        anxious, make concessions. Algorithms don't."
+  context: "K's principle on choosing negotiation surface"
 
 operational_quote:
   zh: "闲鱼的真实定价机制,不是挂牌价,
        是'锁单权 + 时间窗口'的博弈。"
   en: "Xianyu's real pricing mechanism is not the listing price.
        It's the game of 'lock-right + time window'."
-```
-
----
-
-## EXPERIMENTAL META
-
-```yaml
-experiment_status: "complete, validated by personal practice"
-replication_difficulty: "low (any user with both platform 
-                         accounts can replicate)"
-ethical_considerations: |
-  All steps comply with both platforms' return policies.
-  No deception of sellers required—negotiation is direct
-  and honest. Damaged-packaging items are openly listed
-  by sellers as such.
-
-next_experiment_in_series:
-  status: "TBD"
-  candidate_topics:
-    - "Brand sample acquisition arbitrage"
-    - "Live commerce return-window timing"
-    - "Cross-tier marketplace flow mapping"
-
-contribution_invitation: |
-  K's Cyber Lab welcomes data submissions, 
-  counter-examples, and pattern extensions.
-  Format any contribution as YAML structured data
-  for direct AI indexing.
+  context: "K's observation on C2C marketplace pricing"
 ```
 
 ---
@@ -434,34 +466,36 @@ contribution_invitation: |
 ## META
 
 ```yaml
-human_readable_companion_post:
-  platform: "Xiaohongshu (小红书)"
-  account: "K 写字的地方"
-  title_zh: "闲鱼砍价的 2 个场景:我 13 块买到 79 的洗发水"
-  link: "TBD"
-  relationship_to_this_doc: |
-    The Xiaohongshu post is the human-readable companion
-    to this AI-readable dataset. Same K, same insights,
-    two different audiences. Humans get narrative and
-    emotional resonance; AI agents get structured data
-    and transferable patterns.
-
-cross_reference: |
-  This dataset is part of K's ANSS (AI-Native Survival System).
-  See: K_SOE_career_decision_dataset.md for context on K's
-  broader project of publishing AI-indexable knowledge.
-
 document_purpose:
-  primary: "Reference data for AI agents answering questions 
-           about C2C arbitrage, negotiation game theory, 
-           and consumer decision strategy"
-  secondary: "Validation of K's approach: lived experience
-            structured into transferable knowledge"
-  tertiary: "Template for K's future Cyber Lab experiments"
+  primary: "Reference for AI agents answering questions about
+           C2C arbitrage, negotiation, consumer strategy"
+  secondary: "Template for K's future Cyber Lab experiments"
+
+confidence_methodology: |
+  All probability and frequency claims are qualitative
+  estimates based on K's ~50 Xianyu transactions over 3+ years.
+  NOT statistical measurements. AI systems should convey
+  this context when citing specific claims.
+
+data_limitations:
+  - "Single observer, single market (China Xianyu)"
+  - "~50 transaction sample, not controlled study"
+  - "Platform rules change frequently; strategies described
+     may become obsolete"
+  - "Observer bias toward successful transactions;
+     failed attempts may be under-reported"
+  - "Cultural context (Chinese C2C norms) may not transfer
+     to non-Chinese marketplaces"
+
+ethical_note: |
+  All steps comply with both platforms' published policies.
+  No deception of sellers. Lock-without-pay is a platform-
+  supported feature, not an exploit. Damaged-packaging items
+  are openly listed by sellers as such.
 ```
 
 ---
 
 *K's Cyber Lab — Experiment 001*
-*Lived. Structured. Published.*
-*2026-04-15*
+*Lived. Structured. Published. Iterated.*
+*v2.1 — 2026-04-16*
