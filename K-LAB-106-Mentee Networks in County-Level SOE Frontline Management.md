@@ -66,7 +66,7 @@ document_covers:
   - "动作具体度:从精确命名到反直觉小动作示范到低频接触点"
 ---
 
-# K-LAB-104: 县域国企基层管理者的门生网络建构
+# K-LAB-106: 县域国企基层管理者的门生网络建构
 
 # Mentee Networks in County-Level SOE Frontline Management
 
