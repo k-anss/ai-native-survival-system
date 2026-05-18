@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>半秒脚本 · 操作手册</title>
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --ink:#1A1A1A;
+    --sub:#666666;
+    --faint:#999999;
+    --rule:#E5E5E0;
+    --card:#F5F5F0;
+    --red:#C8553D;
+    --red-bg:#FFF0EC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+    font-size:17px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* progress bar */
+  #progress{
+    position:fixed;top:0;left:0;height:2px;width:0;
+    background:var(--red);z-index:60;
+  }
+
+  /* sticky nav */
+  #nav{
+    position:fixed;top:0;left:0;right:0;height:52px;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 24px;
+    background:rgba(250,250,247,0.82);
+    backdrop-filter:saturate(180%) blur(12px);
+    -webkit-backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--rule);
+  }
+  #nav .title-mini{
+    font-size:14px;font-weight:600;letter-spacing:-0.01em;
+    display:flex;align-items:center;gap:8px;
+  }
+  #nav .badge{
+    font-size:11px;color:var(--red);border:1px solid var(--red);
+    border-radius:2px;padding:1px 5px;font-weight:600;letter-spacing:0.04em;
+  }
+  #toc-btn{
+    font-size:14px;color:var(--sub);cursor:pointer;
+    background:none;border:none;font-family:inherit;
+  }
+  #toc-btn:hover{color:var(--ink);}
+
+  /* toc drawer */
+  #toc{
+    position:fixed;top:0;right:0;bottom:0;width:300px;z-index:55;
+    background:var(--bg);border-left:1px solid var(--rule);
+    transform:translateX(100%);transition:transform .28s ease;
+    padding:72px 28px 28px;overflow-y:auto;
+  }
+  #toc.open{transform:translateX(0);}
+  #toc h4{font-size:12px;letter-spacing:0.1em;color:var(--faint);
+    text-transform:uppercase;margin-bottom:18px;font-weight:600;}
+  #toc a{
+    display:flex;gap:12px;text-decoration:none;color:var(--ink);
+    font-size:15px;padding:9px 0;border-bottom:1px solid var(--rule);
+  }
+  #toc a .n{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums;}
+  #toc a:hover{color:var(--red);}
+  #overlay{
+    position:fixed;inset:0;background:rgba(26,26,26,0.18);
+    z-index:54;opacity:0;pointer-events:none;transition:opacity .28s;
+  }
+  #overlay.open{opacity:1;pointer-events:auto;}
+
+  /* layout */
+  main{max-width:680px;margin:0 auto;padding:52px 24px 0;}
+
+  /* hero */
+  .hero{padding:72px 0 56px;border-bottom:1px solid var(--rule);}
+  .hero h1{
+    font-size:42px;line-height:1.2;font-weight:600;letter-spacing:-0.02em;
+    margin-bottom:20px;
+  }
+  .hero .deck{font-size:19px;color:var(--sub);line-height:1.5;margin-bottom:28px;}
+  .hero .meta{font-size:13px;color:var(--faint);letter-spacing:0.01em;}
+
+  /* sections */
+  section{padding:80px 0;border-bottom:1px solid var(--rule);}
+  section:last-of-type{border-bottom:none;}
+  h2{
+    font-size:28px;line-height:1.3;font-weight:600;letter-spacing:-0.015em;
+    margin-bottom:28px;scroll-margin-top:80px;
+    display:flex;align-items:baseline;gap:14px;
+  }
+  h2 .secn{
+    color:var(--red);font-size:18px;font-weight:600;
+    font-variant-numeric:tabular-nums;
+  }
+  h3{font-size:20px;font-weight:600;margin:36px 0 14px;letter-spacing:-0.01em;}
+  p{margin-bottom:1.4em;}
+  p:last-child{margin-bottom:0;}
+  .lead{color:var(--sub);}
+  strong{font-weight:600;}
+
+  /* key judgement */
+  .judge{
+    font-size:22px;font-weight:600;letter-spacing:-0.01em;line-height:1.45;
+    text-align:center;margin:60px 0;
+  }
+  .judge.red{color:var(--red);}
+
+  /* compare block */
+  .compare{
+    display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0;
+  }
+  .compare .col{
+    background:var(--card);padding:24px;border-radius:3px;
+  }
+  .compare .label{
+    font-size:12px;letter-spacing:0.1em;font-weight:600;
+    text-transform:uppercase;margin-bottom:12px;
+  }
+  .compare .col.no .label{color:var(--faint);}
+  .compare .col.yes .label{color:var(--red);}
+  .compare .head{font-size:17px;font-weight:600;margin-bottom:10px;line-height:1.4;}
+  .compare .desc{font-size:15px;color:var(--sub);line-height:1.6;}
+  .compare .desc .ex{display:block;margin-top:8px;font-style:italic;}
+
+  /* concept rows (ARISE) */
+  .concept{margin:32px 0;}
+  .concept .row{
+    display:grid;grid-template-columns:48px 1fr;gap:16px;
+    padding:22px 0;border-bottom:1px solid var(--rule);
+  }
+  .concept .row:first-child{border-top:1px solid var(--rule);}
+  .concept .letter{
+    font-size:30px;font-weight:600;color:var(--red);line-height:1;
+    letter-spacing:-0.02em;
+  }
+  .concept .cname{font-size:17px;font-weight:600;margin-bottom:4px;}
+  .concept .cname .en{font-size:13px;color:var(--faint);font-weight:400;margin-left:8px;}
+  .concept .cdef{font-size:15px;color:var(--sub);line-height:1.6;margin-bottom:8px;}
+  .concept .canalogy{
+    font-size:14px;color:var(--ink);background:var(--card);
+    padding:10px 14px;border-radius:3px;line-height:1.55;
+  }
+  .concept .canalogy b{color:var(--red);font-weight:600;}
+  .concept .row.spine .letter{color:var(--red);}
+  .concept .tag-spine{
+    display:inline-block;font-size:11px;letter-spacing:0.06em;font-weight:600;
+    color:var(--red);border:1px solid var(--red);border-radius:2px;
+    padding:1px 6px;margin-left:8px;vertical-align:2px;
+  }
+  .concept .tag-opt{
+    display:inline-block;font-size:11px;letter-spacing:0.06em;
+    color:var(--faint);border:1px solid var(--rule);border-radius:2px;
+    padding:1px 6px;margin-left:8px;vertical-align:2px;
+  }
+
+  /* constraint list */
+  .rules{margin:28px 0;}
+  .rules .item{
+    padding:22px 0;border-bottom:1px solid var(--rule);
+  }
+  .rules .item:first-child{border-top:1px solid var(--rule);}
+  .rules .rn{
+    font-size:13px;font-weight:600;color:var(--red);letter-spacing:0.04em;
+    margin-bottom:6px;
+  }
+  .rules .rt{font-size:18px;font-weight:600;margin-bottom:6px;}
+  .rules .rd{font-size:15px;color:var(--sub);line-height:1.65;}
+
+  /* timeline svg */
+  .figure{margin:40px 0;}
+  .figure svg{width:100%;height:auto;display:block;}
+  .figure .cap{
+    font-size:13px;color:var(--sub);text-align:center;margin-top:14px;
+  }
+
+  /* details / boundary */
+  details{
+    border-top:1px solid var(--rule);
+  }
+  details:last-of-type{border-bottom:1px solid var(--rule);}
+  details summary{
+    cursor:pointer;list-style:none;padding:18px 0;
+    font-size:16px;font-weight:600;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  details summary::-webkit-details-marker{display:none;}
+  details summary .sign{
+    color:var(--red);font-size:20px;font-weight:400;line-height:1;
+  }
+  details[open] summary .sign::before{content:"\2212";}
+  details:not([open]) summary .sign::before{content:"+";}
+  details .body{
+    padding:0 0 22px;font-size:15px;color:var(--sub);line-height:1.7;
+  }
+  details .body .why{
+    font-size:13px;color:var(--faint);margin-top:8px;font-style:italic;
+  }
+
+  /* self-check cards */
+  .check{margin:32px 0;}
+  .check .step{
+    background:var(--card);border-radius:3px;padding:22px 24px;margin-bottom:14px;
+  }
+  .check .step .sq{
+    font-size:18px;font-weight:600;margin-bottom:8px;
+    display:flex;gap:12px;
+  }
+  .check .step .sq .qn{color:var(--red);font-variant-numeric:tabular-nums;}
+  .check .step .sa{font-size:15px;color:var(--sub);line-height:1.65;}
+  .check .step .verdict{
+    display:inline-block;margin-top:12px;font-size:13px;
+    background:var(--bg);border:1px solid var(--rule);
+    border-radius:2px;padding:3px 10px;color:var(--ink);
+  }
+  .check .step .verdict.pass{border-color:var(--red);color:var(--red);}
+
+  /* example script chip */
+  .scriptchip{
+    background:var(--red-bg);border:1px solid var(--red);
+    border-radius:3px;padding:18px 22px;margin:24px 0;
+    font-size:18px;font-weight:600;text-align:center;letter-spacing:-0.01em;
+  }
+  .scriptchip .lab{
+    display:block;font-size:11px;letter-spacing:0.1em;font-weight:600;
+    color:var(--red);text-transform:uppercase;margin-bottom:8px;
+  }
+
+  /* footer */
+  footer{
+    max-width:680px;margin:0 auto;padding:56px 24px 80px;
+    font-size:13px;color:var(--faint);line-height:1.7;
+  }
+  footer .sig{border-top:1px solid var(--rule);padding-top:28px;}
+  footer .sig strong{color:var(--sub);font-weight:600;}
+
+  /* responsive */
+  @media (max-width:680px){
+    body{font-size:16px;}
+    .hero h1{font-size:32px;}
+    .hero .deck{font-size:17px;}
+    h2{font-size:24px;}
+    .judge{font-size:19px;margin:44px 0;}
+    .compare{grid-template-columns:1fr;}
+    section{padding:60px 0;}
+    .concept .row{grid-template-columns:38px 1fr;gap:12px;}
+    .concept .letter{font-size:26px;}
+    #toc{width:84vw;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav id="nav">
+  <div class="title-mini">
+    <span class="badge">留档</span>
+    半秒脚本 · 操作手册
+  </div>
+  <button id="toc-btn">目录 &#9662;</button>
+</nav>
+
+<div id="overlay"></div>
+<aside id="toc">
+  <h4>目录</h4>
+  <a href="#s1"><span class="n">01</span><span>这套方法在做什么</span></a>
+  <a href="#s2"><span class="n">02</span><span>一个能用的脚本：ARISE</span></a>
+  <a href="#s3"><span class="n">03</span><span>三条不可破的硬约束</span></a>
+  <a href="#s4"><span class="n">04</span><span>怎么练：地点、频率、时长</span></a>
+  <a href="#s5"><span class="n">05</span><span>你会经历什么</span></a>
+  <a href="#s6"><span class="n">06</span><span>什么情况下别用它</span></a>
+  <a href="#s7"><span class="n">07</span><span>五分钟自检</span></a>
+</aside>
+
+<main>
+
+  <header class="hero">
+    <h1>半秒脚本 · 操作手册</h1>
+    <p class="deck">不读那本书，也能上手用它的方法。这一页只讲怎么用，和什么时候别用。</p>
+    <p class="meta">基于《The Half Second》(Li Xiaolai) 的方法整理 · 操作摘要 · 个人留档</p>
+  </header>
+
+  <!-- 01 -->
+  <section id="s1">
+    <h2><span class="secn">01</span>这套方法在做什么</h2>
+    <p>人一天里大部分行为，是在"还没来得及思考"的那半秒里就定了的。饭后伸手去拿烟、被人质疑时立刻辩解、深夜又划开手机——这些都发生在意志和道理赶到之前。</p>
+    <p>这套方法不靠意志硬扛那半秒。它做的是一件更简单的事：<strong>挑一句描述具体动作的短话，用你自己的声音，反复对自己说，说上几个月，直到这句话变成你在那半秒里的默认反应。</strong></p>
+    <p class="lead">就这么一件事。它不神秘，也不快。它能不能成，几乎全看你那句话写得对不对——这正是这份手册要解决的。</p>
+    <p class="judge red">挑一句话，重复几个月，换掉那半秒的默认动作。</p>
+  </section>
+
+  <!-- 02 -->
+  <section id="s2">
+    <h2><span class="secn">02</span>一个能用的脚本：ARISE</h2>
+    <p>"脚本"就是你要反复对自己说的那句话。一句好脚本和一句没用的脚本，差别很具体。先看最关键的一条规则。</p>
+
+    <h3>脚本必须瞄一个"动作"，不能瞄一个"状态"或"结果"</h3>
+    <p>你的身体能执行一个动作，但没法直接执行一种感觉、也没法直接交付一个结果。对自己说"我很平静"，理性会立刻发现这不是真的，于是这句话被挡在门外，重复多少次都进不去。换成一个动作，它才装得进去。</p>
+
+    <div class="compare">
+      <div class="col no">
+        <div class="label">装不进去</div>
+        <div class="head">瞄状态 / 瞄结果</div>
+        <div class="desc">
+          要求"成为某种感觉"或"达成某个结果"，身体没法直接执行。
+          <span class="ex">"我很平静" · "我要瘦十斤" · "我很有条理"</span>
+        </div>
+      </div>
+      <div class="col yes">
+        <div class="label">装得进去</div>
+        <div class="head">瞄动作</div>
+        <div class="desc">
+          一个身体能做、旁人能看出做没做、有完成时刻的具体动作。
+          <span class="ex">"我深呼吸三次" · "账单到了，我六十秒内打开它"</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>ARISE：一句脚本的五个部分</h3>
+    <p>一句完整的脚本可以拆成五个部分，首字母拼成 ARISE。但要记住一句话：<strong>它不是五个必填的格子，而是一根必须有的"主干" + 四个可选的"零件"。</strong>多数好脚本只用到一两个。</p>
+
+    <div class="concept">
+      <div class="row spine">
+        <div class="letter">A</div>
+        <div>
+          <div class="cname">动作　<span class="en">Action</span><span class="tag-spine">必须</span></div>
+          <div class="cdef">脚本的主干，唯一不能省的部分。那半秒里你身体真正去做的那个具体动作。</div>
+          <div class="canalogy">类比 · <b>装修先定承重墙</b>。别的都可以改，承重墙必须先立起来。没有动作，整句脚本就站不住。</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="letter">R</div>
+        <div>
+          <div class="cname">理由　<span class="en">Reason</span><span class="tag-opt">可选</span></div>
+          <div class="cdef">一句"因为……"。只在你需要时加，而且必须是你<strong>说到第一千遍仍然真心认同</strong>的理由。</div>
+          <div class="canalogy">类比 · <b>给一台机器接上电源</b>。接对了电，它能一直转；接一个你自己都不信的假理由，用一阵就没电了。</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="letter">I</div>
+        <div>
+          <div class="cname">身份　<span class="en">Identity</span><span class="tag-opt">可选</span></div>
+          <div class="cdef">这个动作背后"你是谁"。多数时候不用写出来——动作本身就带着它。</div>
+          <div class="canalogy">类比 · <b>改总开关，比一盏盏关灯省事</b>。"我从不抽烟"改的是身份这个总开关，跟抽烟有关的几十个动作会跟着一起变。</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="letter">S</div>
+        <div>
+          <div class="cname">情境　<span class="en">Situation</span><span class="tag-opt">可选</span></div>
+          <div class="cdef">动作发生在哪个具体时刻。能覆盖所有场合就不写它（"我从不……"）；只在某个特定时刻才成立，就写"当……的时候，我……"。</div>
+          <div class="canalogy">类比 · <b>挂钩要钉在墙上，不能钉在空气里</b>。情境最好挂在一个固定动作或固定时刻上（"下床站起来""按发送键之前"），别挂在"当我有空"这种抓不住的地方。</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="letter">E</div>
+        <div>
+          <div class="cname">情绪　<span class="en">Emotion</span><span class="tag-opt">可选</span></div>
+          <div class="cdef">真实的情绪会让每一次重复"更重"、记得更牢。可以投入，但<strong>必须是真的，不能表演</strong>。没有真情绪，就让脚本平着说，照样能成，只是慢些。</div>
+          <div class="canalogy">类比 · <b>给文件盖个章</b>。盖了章的那一份归档时分量更重。但盖的必须是真章——演出来的激动，会被你自己识破。</div>
+        </div>
+      </div>
+    </div>
+
+    <p>所以一句脚本可以短到只有主干，也可以带上几个零件。下面三句都是合格的脚本：</p>
+    <div class="scriptchip">
+      <span class="lab">只有主干</span>
+      我从不抽烟。
+    </div>
+    <div class="scriptchip">
+      <span class="lab">动作 + 情境</span>
+      账单到了，我六十秒内打开它。
+    </div>
+    <div class="scriptchip">
+      <span class="lab">动作 + 情境 + 理由</span>
+      她说话时，我先看她的眼睛再回答，因为这个事一直在让我失去她。
+    </div>
+
+    <p class="judge">瞄动作，不瞄状态。这一条做对了，脚本就成功了一半。</p>
+  </section>
+
+  <!-- 03 -->
+  <section id="s3">
+    <h2><span class="secn">03</span>三条不可破的硬约束</h2>
+    <p>不管你的脚本用了几个零件，下面三条每一条都必须满足。点开可以看为什么。</p>
+
+    <div class="rules">
+      <div class="item">
+        <div class="rn">约束一</div>
+        <div class="rt">用现在时</div>
+        <div class="rd">"我从不抽烟"，不是"我要戒烟"。</div>
+        <details style="border:none;">
+          <summary style="padding:10px 0;font-size:14px;color:var(--sub);font-weight:400;">
+            <span>为什么</span><span class="sign"></span>
+          </summary>
+          <div class="body" style="padding-bottom:14px;">
+            将来时是一个预测，而关于未来的预测总是不确定的——理性会抓住这个不确定，把整句话当成"不一定能做到的承诺"驳回。现在时不是预测，是对当下的描述，理性没有可反驳的把柄。
+          </div>
+        </details>
+      </div>
+      <div class="item">
+        <div class="rn">约束二</div>
+        <div class="rt">一口气说得完</div>
+        <div class="rd">三到四秒能说完。太长的脚本，你一天说不了几次。</div>
+        <details style="border:none;">
+          <summary style="padding:10px 0;font-size:14px;color:var(--sub);font-weight:400;">
+            <span>为什么</span><span class="sign"></span>
+          </summary>
+          <div class="body" style="padding-bottom:14px;">
+            起作用的是"次数"。一句话短，你在排队、走路、等红灯的零碎空隙里都能说一遍，一天累积几十上百次。一句话长，它就只在你专门坐下来时才被说，次数远远不够。
+          </div>
+        </details>
+      </div>
+      <div class="item">
+        <div class="rn">约束三</div>
+        <div class="rt">用你自己的声音</div>
+        <div class="rd">是你自己平时会说出口的大白话，不是书面语，不是从书上抄来的句子。</div>
+        <details style="border:none;">
+          <summary style="padding:10px 0;font-size:14px;color:var(--sub);font-weight:400;">
+            <span>为什么</span><span class="sign"></span>
+          </summary>
+          <div class="body" style="padding-bottom:14px;">
+            借来的句子，会被你当成"别人的话"来听，而不是你自己的承诺。脚本的用词、语气、句式，都得像你自己写出来的，它才会被当成你的一部分收下。
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section id="s4">
+    <h2><span class="secn">04</span>怎么练：地点、频率、时长</h2>
+
+    <h3>在哪说：哪儿都行</h3>
+    <p>这是最反直觉、也最让人轻松的一点。你不需要专门在"老反应发作的那个场合"说脚本。刷牙时、走路时、车上、睡前躺着——<strong>在哪说不重要，因为起作用的是说的总次数，不是说的地点。</strong>想起来就说。</p>
+
+    <h3>怎么说：想起来就说，别排计划、别数数</h3>
+    <p>它不是打卡任务。不用定闹钟，不用记今天说了几遍。这句话什么时候自己冒进脑子，你就说一遍，出声更好，不方便就在心里说。</p>
+
+    <h3>说多久：按月算，不是按天</h3>
+    <p>这件事最重要的预期管理：<strong>一句脚本装进半秒，是几个月的事，不是几天的事。</strong>前一两周通常什么变化都看不到——那正是过程的一部分，不是失败。下一节讲你具体会经历什么。</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 680 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- baseline -->
+        <line x1="40" y1="78" x2="640" y2="78" stroke="#1A1A1A" stroke-width="1"/>
+        <!-- arrow -->
+        <path d="M640 78 L632 74 L632 82 Z" fill="#1A1A1A"/>
+        <!-- nodes -->
+        <!-- node1 -->
+        <rect x="40" y="64" width="118" height="28" fill="#FAFAF7" stroke="#1A1A1A" stroke-width="1"/>
+        <text x="99" y="82" font-size="12" fill="#1A1A1A" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">开始说脚本</text>
+        <!-- node2 -->
+        <rect x="190" y="64" width="118" height="28" fill="#FAFAF7" stroke="#1A1A1A" stroke-width="1"/>
+        <text x="249" y="82" font-size="12" fill="#1A1A1A" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">觉得这事很蠢</text>
+        <!-- node3 -->
+        <rect x="340" y="64" width="118" height="28" fill="#FAFAF7" stroke="#1A1A1A" stroke-width="1"/>
+        <text x="399" y="82" font-size="12" fill="#1A1A1A" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">开始觉得烦</text>
+        <!-- node4 highlight -->
+        <rect x="490" y="62" width="132" height="32" fill="#FFF0EC" stroke="#C8553D" stroke-width="1"/>
+        <text x="556" y="78" font-size="12" fill="#1A1A1A" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">脚本自己冒出来</text>
+        <text x="556" y="91" font-size="11" fill="#C8553D" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">＝ 装好了</text>
+        <!-- connectors (small) -->
+        <line x1="158" y1="78" x2="190" y2="78" stroke="#1A1A1A" stroke-width="1"/>
+        <line x1="308" y1="78" x2="340" y2="78" stroke="#1A1A1A" stroke-width="1"/>
+        <line x1="458" y1="78" x2="490" y2="78" stroke="#1A1A1A" stroke-width="1"/>
+        <!-- phase labels under -->
+        <text x="99" y="120" font-size="11" fill="#999999" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">第 1 天</text>
+        <text x="249" y="120" font-size="11" fill="#999999" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">前 ~100 次</text>
+        <text x="399" y="120" font-size="11" fill="#999999" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">第 2–3 个月</text>
+        <text x="556" y="120" font-size="11" fill="#999999" text-anchor="middle" font-family="-apple-system,'PingFang SC',sans-serif">之后</text>
+      </svg>
+      <div class="cap">一句脚本的典型时间线。中位数约 66 天，慢的可到 250 天以上。</div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section id="s5">
+    <h2><span class="secn">05</span>你会经历什么</h2>
+    <p>过程中的体感会骗你。它给你的信号，和它实际的进度，几乎是反的。把下面这组对照记住，你就不会在错误的地方放弃。</p>
+
+    <div class="compare">
+      <div class="col no">
+        <div class="label">你以为</div>
+        <div class="head">"这没用，我放弃"</div>
+        <div class="desc">
+          头一两周毫无变化，前一百遍说着觉得又假又蠢。感觉像失败。
+        </div>
+      </div>
+      <div class="col yes">
+        <div class="label">其实是</div>
+        <div class="head">它正在装</div>
+        <div class="desc">
+          那个"蠢"的感觉，恰恰是脚本正在绕过你理性、往里装的标志。此时停下，是停在了离成功最近、却还没到的地方。
+        </div>
+      </div>
+    </div>
+
+    <p>三个阶段，照顺序来：</p>
+    <p><strong>第一阶段 · 觉得蠢。</strong>前一百遍左右，每次说都有个声音在旁边嘀咕"这也太傻了""这哪有用"。这个声音不是结论，是噪音。继续说。</p>
+    <p><strong>第二阶段 · 觉得烦。</strong>大约第二到第三个月，那个嘀咕的声音消失了，换成一种不耐烦——"又来了，这句话我说过一千遍了"。<strong>这个"烦"是好消息</strong>，它说明这句话对你已经熟到不再新鲜，正是快装好的标志。继续说。</p>
+    <p><strong>第三阶段 · 它自己冒出来。</strong>某一天，你没刻意去想，这句话自己浮现在脑子里——像一句歌词不请自来。这就是装好了。到这时，你不用再使劲，它已经在那半秒里替你工作了。</p>
+
+    <p class="judge red">那个"蠢"不是失败，是它在装。烦，是快成了。</p>
+
+    <p>关于放弃的时点，记住一个数：一句脚本装进半秒，中间值大约 66 天。<strong>所以"我练了两周没用"不能作数</strong>——两周正好是它最容易劝你放弃的那个点。</p>
+  </section>
+
+  <!-- 06 -->
+  <section id="s6">
+    <h2><span class="secn">06</span>什么情况下别用它</h2>
+    <p>这套方法不是对所有目的都适用。下面四种情况，脚本要么装不上，要么装上了反而帮倒忙。开始之前，先拿你的目的对一遍。点开看怎么补救。</p>
+
+    <details>
+      <summary><span>一、你的目的是一个"结果"，不是一个动作</span><span class="sign"></span></summary>
+      <div class="body">
+        "我要瘦十斤""我要赚更多钱"——这些是世界对你的评价，是很多动作累积出来的下游产物。半秒交付不了一个结果，它只能交付一个动作。
+        <div class="why">补救：把结果拆成一个具体的、你每天做得到的动作，再为那个动作写脚本。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span>二、你的目的是"不要做什么"</span><span class="sign"></span></summary>
+      <div class="body">
+        "我不要发火""我不再拖延"——只说了不许做什么，没说该做什么。压力一上来，那半秒会拿旧反应去填这个空白。否定式脚本几乎装不上。
+        <div class="why">补救：翻成正面的、构建式的动作——不是"我不发火"，而是"先解决问题，追责永远排在后面"。说出你要做的那件事。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span>三、脚本里的理由，你自己都不信</span><span class="sign"></span></summary>
+      <div class="body">
+        硬塞一个漂亮但空洞的理由（"因为这样是对的""因为健康很重要"），头几遍还行，说到第一百遍，你的理性会发现你在对自己说一句你并不真信的话，于是开始把它顶回去。
+        <div class="why">补救：要么换一个你说到第一千遍仍然认同的、具体的理由；要么干脆不写理由——脚本只有主干也能成立。</div>
+      </div>
+    </details>
+
+    <details>
+      <summary><span>四、你想一次上很多个脚本</span><span class="sign"></span></summary>
+      <div class="body">
+        同时练十个脚本，你的注意力被分成十份，每个都拿不到足够的次数，结果一个都装不上。
+        <div class="why">补救：一次只练一到两个。等它们装稳了，再加下一个。</div>
+      </div>
+    </details>
+
+    <p style="margin-top:32px;" class="lead">在这四种情况之外，对付那些日常的、清晰的、有行为边界的目的——这套方法是好用的。先用它解决一件你能说清楚的小事。</p>
+  </section>
+
+  <!-- 07 -->
+  <section id="s7">
+    <h2><span class="secn">07</span>五分钟自检</h2>
+    <p>开始之前，把你想改的那个目的，按顺序走一遍下面四问。任何一问没过，就先回去修，别急着开练。</p>
+
+    <div class="check">
+      <div class="step">
+        <div class="sq"><span class="qn">1</span><span>它是一个"动作"吗？</span></div>
+        <div class="sa">旁边一个人看着你，能不能判断这件事你做了没做？能——是动作。不能（比如"变自信""变平静"）——它是状态，回 02 节，把它换成一个动作。</div>
+        <span class="verdict pass">是动作 → 继续</span>
+      </div>
+      <div class="step">
+        <div class="sq"><span class="qn">2</span><span>它是一个"结果"吗？</span></div>
+        <div class="sa">它需不需要靠很多次行为累积、靠时间才能达成（"瘦十斤""赚更多"）？是——它是结果，回 06 节第一条，拆成今天就能做的动作。</div>
+        <span class="verdict pass">不是结果 → 继续</span>
+      </div>
+      <div class="step">
+        <div class="sq"><span class="qn">3</span><span>它是"不要做什么"吗？</span></div>
+        <div class="sa">这句话是不是只说了"别做 X"？是——回 06 节第二条，翻成"要做 Y"，把你真正要做的那个正面动作说出来。</div>
+        <span class="verdict pass">是正面动作 → 继续</span>
+      </div>
+      <div class="step">
+        <div class="sq"><span class="qn">4</span><span>它过了三条硬约束吗？</span></div>
+        <div class="sa">现在时？一口气说得完？是你自己会说的大白话？三条全过——你可以开始按 ARISE 写出你的第一句脚本了。</div>
+        <span class="verdict pass">三条全过 → 开练</span>
+      </div>
+    </div>
+
+    <p class="judge">第一句脚本，挑一件小到"有点多余"的事。先跑通一次，你就看见这套东西怎么转了。</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="sig">
+    <p><strong>关于这份文件</strong></p>
+    <p>本页是基于《The Half Second: How first reactions get installed, and how to edit them》(Li Xiaolai) 一书方法部分整理的操作摘要，省去了原书的论证与实证。方法、概念与术语（半秒、ARISE、频率等）的著作权归原书作者所有。</p>
+    <p>本页仅为个人阅读留档与方法速查之用，非原书内容的复制，亦非 K 的原创主张。如需完整论证、证据与边界说明，请阅读原书。</p>
+  </div>
+</footer>
+
+<script>
+  // progress bar
+  var progress = document.getElementById('progress');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop;
+    var total = h.scrollHeight - h.clientHeight;
+    var pct = total > 0 ? (scrolled / total) * 100 : 0;
+    progress.style.width = pct + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  // toc drawer
+  var toc = document.getElementById('toc');
+  var overlay = document.getElementById('overlay');
+  var tocBtn = document.getElementById('toc-btn');
+  function openToc(){ toc.classList.add('open'); overlay.classList.add('open'); }
+  function closeToc(){ toc.classList.remove('open'); overlay.classList.remove('open'); }
+  tocBtn.addEventListener('click', function(){
+    toc.classList.contains('open') ? closeToc() : openToc();
+  });
+  overlay.addEventListener('click', closeToc);
+  toc.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', closeToc);
+  });
+</script>
+
+</body>
+</html>
