@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>钱·赚钱·蓝海 — 一份知识地图</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4EEDF;
+  --bg-alt: #EBE3CF;
+  --ink: #1A1814;
+  --ink-soft: #463F35;
+  --ink-faded: #7A6E5C;
+  --vermillion: #A4382C;
+  --vermillion-deep: #7E2A20;
+  --ochre: #B89968;
+  --gold: #C9A961;
+  --rule: #D4C9B5;
+  --rule-soft: #E2D9C5;
+  --emphasis: #0A0805;
+  --shadow: rgba(26, 24, 20, 0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Noto Serif SC', 'Cormorant Garamond', serif;
+  font-size: 17px;
+  line-height: 1.85;
+  font-weight: 400;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.045'/%3E%3C/svg%3E");
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse at top left, rgba(184, 153, 104, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(164, 56, 44, 0.04) 0%, transparent 50%);
+  z-index: 0;
+}
+
+main { position: relative; z-index: 2; }
+
+/* === NAVIGATION === */
+.nav-rail {
+  position: fixed;
+  left: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 14px;
+}
+
+.nav-rail a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+  text-decoration: none;
+  padding-left: 16px;
+  position: relative;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.nav-rail a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 1px;
+  background: var(--ink-faded);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.nav-rail a:hover, .nav-rail a.active {
+  color: var(--vermillion);
+  padding-left: 22px;
+}
+
+.nav-rail a:hover::before, .nav-rail a.active::before {
+  width: 14px;
+  background: var(--vermillion);
+}
+
+/* === HERO === */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 120px 80px 200px;
+  position: relative;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-faded);
+  margin-bottom: 48px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.hero-meta::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--vermillion);
+}
+
+.hero-title {
+  font-size: clamp(56px, 9vw, 128px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--emphasis);
+  margin-bottom: 32px;
+  font-feature-settings: "ss01";
+}
+
+.hero-title .dot {
+  color: var(--vermillion);
+  font-weight: 400;
+  margin: 0 4px;
+}
+
+.hero-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--ink-soft);
+  margin-bottom: 56px;
+  letter-spacing: 0.02em;
+}
+
+.hero-intro {
+  max-width: 580px;
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  margin-bottom: 40px;
+}
+
+.hero-intro p + p { margin-top: 18px; }
+
+.hero-tags {
+  display: flex;
+  gap: 32px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: var(--ink-faded);
+}
+
+.hero-tags span {
+  position: relative;
+  padding-left: 14px;
+}
+
+.hero-tags span::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--vermillion);
+  font-size: 18px;
+  line-height: 0.7;
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 48px;
+  left: 200px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+}
+
+.scroll-cue::after {
+  content: '↓';
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+/* === SECTION === */
+section.layer {
+  padding: 140px 120px 140px 200px;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+
+.section-header {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 60px;
+  margin-bottom: 72px;
+  align-items: start;
+}
+
+.section-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 180px;
+  font-weight: 300;
+  line-height: 0.85;
+  color: var(--vermillion);
+  font-style: italic;
+}
+
+.section-num .cn {
+  font-family: 'Noto Serif SC', serif;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 100px;
+  color: var(--emphasis);
+  display: block;
+  margin-top: -10px;
+  letter-spacing: -0.05em;
+}
+
+.section-title-block .kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--emphasis);
+  margin-bottom: 24px;
+}
+
+.section-lead {
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  font-style: italic;
+  max-width: 620px;
+}
+
+/* === SECTION BODY === */
+.section-body {
+  max-width: 760px;
+  margin-left: 280px;
+}
+
+.section-body > * + * { margin-top: 28px; }
+
+.section-body h3 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--emphasis);
+  margin-top: 64px !important;
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 22px;
+}
+
+.section-body h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 10px;
+  height: 10px;
+  background: var(--vermillion);
+}
+
+.section-body h4 {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-top: 36px !important;
+  margin-bottom: 4px;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.section-body p {
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--ink);
+}
+
+.section-body strong {
+  font-weight: 700;
+  color: var(--emphasis);
+}
+
+.section-body em {
+  font-style: italic;
+  color: var(--vermillion-deep);
+  font-weight: 500;
+}
+
+/* === PULL QUOTE === */
+.pullquote {
+  margin: 56px -40px !important;
+  padding: 36px 40px;
+  border-left: 3px solid var(--vermillion);
+  background: linear-gradient(90deg, var(--bg-alt) 0%, transparent 100%);
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  font-size: 24px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--emphasis);
+  position: relative;
+}
+
+.pullquote::before {
+  content: '「';
+  position: absolute;
+  left: 8px;
+  top: -8px;
+  font-size: 60px;
+  color: var(--vermillion);
+  opacity: 0.2;
+  font-family: 'Noto Serif SC', serif;
+  line-height: 1;
+}
+
+/* === DEFINITION === */
+.definition {
+  background: var(--bg-alt);
+  padding: 32px 36px;
+  border-top: 2px solid var(--ink);
+  margin: 32px 0;
+  position: relative;
+}
+
+.definition .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.definition .formula {
+  font-family: 'Noto Serif SC', 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--emphasis);
+  line-height: 1.5;
+}
+
+.definition .formula .op {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--vermillion);
+  margin: 0 6px;
+  font-weight: 400;
+}
+
+/* === LIST CARDS === */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin: 40px 0 !important;
+}
+
+.cards.three { grid-template-columns: repeat(3, 1fr); }
+.cards.four { grid-template-columns: repeat(2, 1fr); }
+
+.card {
+  background: var(--bg);
+  padding: 28px 28px 32px;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+.card:hover { background: var(--bg-alt); }
+
+.card .num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--vermillion);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.card .title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--emphasis);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.card .desc {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+/* === NUMBERED LIST (8 layers) === */
+.layered-list {
+  margin: 48px 0 !important;
+  border-top: 1px solid var(--ink);
+}
+
+.layered-item {
+  display: grid;
+  grid-template-columns: 70px 200px 1fr;
+  gap: 32px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.layered-item .layer-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: var(--vermillion);
+}
+
+.layered-item .layer-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--emphasis);
+}
+
+.layered-item .layer-desc {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* === FOUR STRUCTURES GRID === */
+.four-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+  background: var(--ink);
+  margin: 48px 0 !important;
+  border: 1px solid var(--ink);
+}
+
+.four-cell {
+  background: var(--bg);
+  padding: 36px 32px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.four-cell.highlight {
+  background: var(--bg-alt);
+  position: relative;
+}
+
+.four-cell.highlight::before {
+  content: 'K 主场';
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  padding: 4px 10px;
+  background: var(--vermillion);
+  color: var(--bg);
+}
+
+.four-cell .code {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ochre);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.four-cell .name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--emphasis);
+  margin-bottom: 12px;
+}
+
+.four-cell .desc {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.four-cell .example {
+  font-size: 13px;
+  color: var(--ink-faded);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* === DISTANCE LIST === */
+.distance-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 40px 0 !important;
+}
+
+.dist-item {
+  border-top: 2px solid var(--vermillion);
+  padding-top: 16px;
+}
+
+.dist-item .title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--emphasis);
+  margin-bottom: 6px;
+}
+
+.dist-item .desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* === SINE CURVE VIZ === */
+.sine-viz {
+  margin: 56px 0 !important;
+  padding: 40px 0;
+  background: var(--bg-alt);
+  border-radius: 0;
+}
+
+.sine-viz svg {
+  width: 100%;
+  height: 240px;
+  display: block;
+}
+
+.sine-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8%;
+  margin-top: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+}
+
+/* === HEART PRINCIPLES === */
+.principles {
+  counter-reset: principle;
+  margin: 48px 0 !important;
+}
+
+.principle {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  padding: 36px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+
+.principle:last-child { border-bottom: none; }
+
+.principle::before {
+  counter-increment: principle;
+  content: counter(principle, decimal-leading-zero);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 56px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--vermillion);
+  line-height: 1;
+}
+
+.principle .p-text h4 {
+  font-size: 22px !important;
+  font-weight: 700;
+  color: var(--emphasis);
+  margin: 0 0 8px 0 !important;
+}
+
+.principle .p-text p {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+/* === FOOTER === */
+.coda {
+  padding: 140px 120px 100px 200px;
+  position: relative;
+  background: var(--bg-alt);
+}
+
+.coda-inner {
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.coda h2 {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--emphasis);
+  margin-bottom: 36px;
+  letter-spacing: -0.02em;
+}
+
+.coda h2 .accent {
+  color: var(--vermillion);
+  font-style: italic;
+  font-weight: 400;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.coda p {
+  font-size: 19px;
+  line-height: 1.85;
+  color: var(--ink);
+  margin-bottom: 22px;
+}
+
+.coda p:last-of-type { font-style: italic; color: var(--ink-soft); }
+
+.coda-mark {
+  margin-top: 64px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--ink-faded);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.coda-mark::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--vermillion);
+}
+
+/* === MARGINALIA === */
+.margin-note {
+  position: absolute;
+  right: 60px;
+  width: 180px;
+  font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-faded);
+  border-left: 1px solid var(--ochre);
+  padding-left: 14px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1280px) {
+  .nav-rail { left: 16px; }
+  .hero { padding: 80px 60px 80px 100px; }
+  .scroll-cue { left: 100px; }
+  section.layer { padding: 100px 60px 100px 100px; }
+  .coda { padding: 100px 60px 80px 100px; }
+  .section-body { margin-left: 240px; }
+}
+
+@media (max-width: 900px) {
+  body { font-size: 16px; }
+  .nav-rail { display: none; }
+  .hero { padding: 60px 28px 80px; }
+  .scroll-cue { left: 28px; bottom: 24px; }
+  section.layer { padding: 80px 28px; }
+  .coda { padding: 80px 28px 60px; }
+  .section-header {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .section-num { font-size: 100px; }
+  .section-num .cn { font-size: 56px; }
+  .section-title { font-size: 38px; }
+  .section-body { margin-left: 0; }
+  .section-body h3 { font-size: 22px; margin-top: 48px !important; }
+  .pullquote {
+    margin: 36px 0 !important;
+    padding: 24px;
+    font-size: 18px;
+  }
+  .cards { grid-template-columns: 1fr !important; }
+  .four-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+  .four-cell { min-height: auto; }
+  .layered-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 16px 0;
+  }
+  .distance-list { grid-template-columns: 1fr 1fr; }
+  .principle { grid-template-columns: 1fr; gap: 8px; }
+  .principle::before { font-size: 36px; }
+  .coda h2 { font-size: 42px; }
+  .hero-title { font-size: 56px; }
+}
+
+/* === ANIMATIONS === */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* selection */
+::selection { background: var(--vermillion); color: var(--bg); }
+</style>
+</head>
+<body>
+
+<nav class="nav-rail">
+  <a href="#hero">起·序</a>
+  <a href="#meta">元立场</a>
+  <a href="#layer-1">一·钱</a>
+  <a href="#layer-2">二·赚钱</a>
+  <a href="#layer-3">三·蓝海</a>
+  <a href="#layer-4">四·位置</a>
+  <a href="#layer-5">五·心法</a>
+  <a href="#coda">合·撤回</a>
+</nav>
+
+<main>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="hero">
+  <div class="hero-meta">
+    <span>知识地图</span>
+    <span>v 1.0</span>
+    <span>2026.05</span>
+  </div>
+
+  <h1 class="hero-title">
+    钱<span class="dot">·</span>赚钱<span class="dot">·</span>蓝海
+  </h1>
+
+  <div class="hero-subtitle">一份知识地图，给一个具体的人。</div>
+
+  <div class="hero-intro">
+    <p>这是一段对话留下的痕迹。起点是一篇关于房价的文章，落点是一套关于"如何在这个时代赚一点钱、并且不被钱反过来吃掉"的判断框架。</p>
+    <p>读它不是为了背下来。是为了在你下次看到一个机会、一个项目、一个让你心动的可能性时，脑子里有几把可以掂量的尺。</p>
+    <p>它不是真理。它是脚手架。用完该撤掉。</p>
+  </div>
+
+  <div class="hero-tags">
+    <span>钱的本质</span>
+    <span>赚钱的逻辑</span>
+    <span>蓝海识别</span>
+    <span>个人位置</span>
+    <span>使用心法</span>
+  </div>
+
+  <div class="scroll-cue">向下</div>
+</section>
+
+<!-- ========== META-STANCE ========== -->
+<section class="layer" id="meta">
+  <div class="section-header">
+    <div class="section-num">
+      0
+      <span class="cn">元</span>
+    </div>
+    <div class="section-title-block">
+      <div class="kicker">META · STANCE</div>
+      <h2 class="section-title">在开始用这张地图之前</h2>
+      <p class="section-lead">所有的判断框架都有自己的盲区。把这些写在最前面，是为了让你随时能从框架里跳出来。</p>
+    </div>
+  </div>
+
+  <div class="section-body">
+    <h3>这不是真理，是脚手架</h3>
+    <p>市面上所有的"赚钱方法论"——包括这一份——都不是真理。它们是某些人、在某些时间、面对某些机会，事后整理出来的一些规律。规律有用，但规律永远跟不上变化。</p>
+    <p>把它当工具用，用完该放下。<strong>看见月亮之后，没必要继续盯着指月亮的那根手指</strong>。</p>
+
+    <h3>框架擅长筛掉烂的，可能也筛掉伟大的</h3>
+    <p>Airbnb、Tesla、比特币、OnlyFans 这些后来证明对的项目，事前用任何理性框架打分都会被劝退。这意味着——</p>
+    <div class="pullquote">
+      框架的作用是降低下限，不能提升上限。<br>
+      它能帮你避开 99 个坑，也可能让你错过那 1 个伟大的机会。
+    </div>
+    <p>用它的时候带着这个自觉。重要的判断最后还是你自己做。</p>
+
+    <h3>水面以上 vs 水面以下</h3>
+    <p>这套框架对"水面以上"的事有用——公开市场、产品、技术、营销、能写在合同里的规则。</p>
+    <p>它对"水面以下"的事几乎没用——关系、人情、潜规则、不能写下来的承诺、酒桌上的暗示、上面要谁不要谁。</p>
+    <p>世界另一半的运行逻辑，AI 读不到。<em>那一半，必须靠人</em>。</p>
+
+    <h3>行动 &gt; 判断</h3>
+    <p>100 块钱的真实测试，比 100 小时的框架推演更有用。这套地图存在的最终目的，是让你尽快进入"做"的状态——不是让你停在"想"的舒服里。</p>
+  </div>
+</section>
+
+<!-- ========== LAYER 1: 钱 ========== -->
+<section class="layer" id="layer-1">
+  <div class="section-header">
+    <div class="section-num">
+      I
+      <span class="cn">一</span>
+    </div>
+    <div class="section-title-block">
+      <div class="kicker">LAYER ONE · MONEY</div>
+      <h2 class="section-title">钱是什么</h2>
+      <p class="section-lead">把所有的复杂叙事剥掉，钱在最朴素的层面，就是一件事。</p>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="definition">
+      <span class="label">本质</span>
+      <div class="formula">钱 = 让别人为你做事的凭证</div>
+    </div>
+
+    <p>你有 100 块钱，意味着你可以让别人做相当于 100 块的事——做一顿饭、修一台电脑、教一小时英语、打扫你家。</p>
+    <p>钱本身不是财富。钱是一张承诺——大家共同相信：谁拿着这张纸，就有权调动别人。</p>
+
+    <h3>经济循环的本质</h3>
+    <p>设想一个小岛上有三个人——老张种麦子，老李织布，老王打渔。他们各自产出超过自己消费的部分会发霉、会变质，所以他们交换。</p>
+    <p>这个"换"，就是经济循环本身。注意：到这一步还没有钱。<strong>循环不依赖钱，钱是后来才进来的</strong>。</p>
+    <p>钱出现，是为了解决三方需求对不上号的问题——老张要布但老李不要麦子。所以他们发明了欠条。欠条流转一圈又回来，债务清零，欠条作废。</p>
+
+    <div class="pullquote">
+      钱在最纯粹的形态里，是出现一下又消失的临时记账符号。<br>
+      只要每个人当期赚的 = 当期花的，钱就不会囤积。
+    </div>
+
+    <p>但现实是，总有人月月有剩余。那张凭证不是"停留几周"，而是越积越多。钱在这一刻发生角色变化：<em>从匹配工具，变成未来索取权的存货</em>。</p>
+
+    <h3>金匠如何变成银行家</h3>
+    <p>金匠保管别人的金子，开收据。后来人们发现，收据本身就可以当钱用，金子根本不用搬。金匠也发现，库里 90% 的金子永远躺着没人取——他可以把这部分借出去赚利息。</p>
+    <p>他借的不是真金子，是<strong>新开的一张收据</strong>。库里 100 两金子，市场上流通 150 两的收据。多出来的 50 两购买力，是凭空创造的。</p>
+    <p>这就是银行的本质——它不是钱的中介，是钱的创造者。</p>
+
+    <h3>中国是怎么造钱的</h3>
+    <p>这是一段非常反直觉但非常重要的历史，知道了你就明白中国当下的处境——</p>
+
+    <div class="layered-list">
+      <div class="layered-item">
+        <div class="layer-num">1949 — 1978</div>
+        <div class="layer-name">实物锚</div>
+        <div class="layer-desc">"折实储蓄"按粮食棉布计价，很快进入计划经济，钱本身退化为配给凭证</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">1978 — 1994</div>
+        <div class="layer-name">野蛮发钞</div>
+        <div class="layer-desc">改革开放后市场恢复但央行没有现代工具，反复通胀——1988 抢购、1994 通胀冲到 24%</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">1994 — 2014</div>
+        <div class="layer-name">外汇占款</div>
+        <div class="layer-desc">出口换美元，央行强制结汇印人民币。这 20 年中国人民币间接锚定的，其实是美元</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">2014 — 2021</div>
+        <div class="layer-name">土地财政</div>
+        <div class="layer-desc">外汇见顶后换锚——通过卖地、房贷、城投，土地价格上涨支撑信贷扩张</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">2021 — 至今</div>
+        <div class="layer-name">换锚中</div>
+        <div class="layer-desc">房价下跌、卖地暴跌、城投暴雷。央行开始公开市场买国债，向"美国式"机制靠拢</div>
+      </div>
+    </div>
+
+    <p>每一次"造钱机制"的切换，都对应一次时代红利的转换。<strong>过去 30 年的财富故事，几乎都是踩对了某一次锚的故事</strong>。</p>
+
+    <h3>钱是有生命的</h3>
+    <p>这是 K 自己抛的一个观察，非常对——</p>
+    <p>钱本身不会思考、不会移动。但所有持有钱的人，会持续把钱从低回报的地方挪到高回报的地方。这个动作累积起来，让钱"看起来像有生命"。</p>
+    <div class="pullquote">
+      资本对任何具体的人都没有忠诚，它只忠诚于增值。<br>
+      如果你的下属能让钱更增值，钱就会流向他——他就成了老板。
+    </div>
+    <p>"老板"不是身份，是职能位置。这个位置由"能让钱增值的能力"动态决定。所有大佬都过得不轻松。他们不是在享受成功，是在持续证明自己仍然值得资本流向他们。</p>
+  </div>
+</section>
+
+<!-- ========== LAYER 2: 赚钱 ========== -->
+<section class="layer" id="layer-2">
+  <div class="section-header">
+    <div class="section-num">
+      II
+      <span class="cn">二</span>
+    </div>
+    <div class="section-title-block">
+      <div class="kicker">LAYER TWO · EARNING</div>
+      <h2 class="section-title">赚钱是什么</h2>
+      <p class="section-lead">钱是让别人为你做事的凭证。那"赚钱"就是——让别人愿意把这张凭证交给你。</p>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <div class="definition">
+      <span class="label">本质</span>
+      <div class="formula">赚钱 <span class="op">=</span> 发现需求 <span class="op">+</span> 满足需求</div>
+    </div>
+
+    <p>就这么简单。但太朴素了，朴素到看起来像废话。所以要往下追问——</p>
+
+    <div class="definition">
+      <span class="label">规模</span>
+      <div class="formula">赚多少 <span class="op">=</span> 需求大小 <span class="op">×</span> 覆盖人数 <span class="op">×</span> 不可替代性</div>
+    </div>
+
+    <p>普通人赚的是"小需求 × 少量人 × 高替代性"的钱——天花板很低。<br>
+    大佬赚的是"大需求 × 亿人 × 低替代性"的钱——这就是顶点。</p>
+
+    <h3>赚钱的八种形态</h3>
+    <p>钱付给的从来不是劳动本身，是对某种稀缺资源的分配权。稀缺资源有八种主要形态——</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="num">01</div>
+        <div class="title">劳动钱</div>
+        <div class="desc">出卖时间。天花板最低，最容易被替代。</div>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <div class="title">稀缺技能钱</div>
+        <div class="desc">你会别人不会的事。AI 时代这一类的半衰期在缩短。</div>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <div class="title">位置 / 卡位钱</div>
+        <div class="desc">你恰好在某个生态位上——上下游必经之路。</div>
+      </div>
+      <div class="card">
+        <div class="num">04</div>
+        <div class="title">分配权租金</div>
+        <div class="desc">你决定别人的钱流向哪里。最值钱也最高阶。</div>
+      </div>
+      <div class="card">
+        <div class="num">05</div>
+        <div class="title">杠杆钱</div>
+        <div class="desc">一个决策放大十万人的产出。</div>
+      </div>
+      <div class="card">
+        <div class="num">06</div>
+        <div class="title">注意力钱</div>
+        <div class="desc">你能调动别人的关注。AI 时代的新稀缺。</div>
+      </div>
+      <div class="card">
+        <div class="num">07</div>
+        <div class="title">关系 / 信任钱</div>
+        <div class="desc">人对你有依赖、信赖、想得起来你。</div>
+      </div>
+      <div class="card">
+        <div class="num">08</div>
+        <div class="title">规则差价钱</div>
+        <div class="desc">你跨在两套规则之间套利。</div>
+      </div>
+    </div>
+
+    <h3>赚钱的本质机制：跨越距离</h3>
+    <p>最本质的商业，是"把一个东西挪到另一个地方"——距离就是价值。距离有六种：</p>
+
+    <div class="distance-list">
+      <div class="dist-item">
+        <div class="title">物理距离</div>
+        <div class="desc">运输、贸易、物流。古代商人最早的生意。</div>
+      </div>
+      <div class="dist-item">
+        <div class="title">时间距离</div>
+        <div class="desc">金融、保险、信贷。跨越当下和未来。</div>
+      </div>
+      <div class="dist-item">
+        <div class="title">信息距离</div>
+        <div class="desc">媒体、咨询、情报。知道与不知道之间。</div>
+      </div>
+      <div class="dist-item">
+        <div class="title">认知距离</div>
+        <div class="desc">教育、培训、解释。懂与不懂之间。</div>
+      </div>
+      <div class="dist-item">
+        <div class="title">情绪距离</div>
+        <div class="desc">娱乐、治疗、宗教。焦虑与安心之间。</div>
+      </div>
+      <div class="dist-item">
+        <div class="title">信任距离</div>
+        <div class="desc">品牌、KOL、关系网。陌生与信任之间。</div>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      所有"稀缺"，最深的形态都是<br>
+      "能跨越某种差异的能力"。
+    </div>
+
+    <h3>稀缺的八层演化</h3>
+    <p>把这个再拉远——人类历史上"什么东西稀缺"是一直在变的。每一层出现后，前一层不会消失，但会被压下去成为基础设施：</p>
+
+    <div class="layered-list">
+      <div class="layered-item">
+        <div class="layer-num">L 0</div>
+        <div class="layer-name">身体能力</div>
+        <div class="layer-desc">狩猎采集时代——最强壮、最有经验的人吃肉最多</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">L 1</div>
+        <div class="layer-name">土地 / 政治权力</div>
+        <div class="layer-desc">农业革命后——国王不种地，但吃得最多。分配权从一万年前就存在</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">L 2</div>
+        <div class="layer-name">位置 / 信息差</div>
+        <div class="layer-desc">商业贸易时代——不生产但靠"挪东西"赚钱</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">L 3</div>
+        <div class="layer-name">资本本身</div>
+        <div class="layer-desc">金融时代——财富完全脱离物理实体，靠持有别人的债赚钱</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">L 4</div>
+        <div class="layer-name">组织化生产能力</div>
+        <div class="layer-desc">工业革命——劳动从这时起被定价为"标准化的时间"</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">L 5</div>
+        <div class="layer-name">专业知识 / 技能</div>
+        <div class="layer-desc">知识经济——过去 50 年中产阶级的故事</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">L 6</div>
+        <div class="layer-name">分发渠道 / 注意力</div>
+        <div class="layer-desc">平台经济——谁控制连接，谁就抽税</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">L 7</div>
+        <div class="layer-name">人之所以为人</div>
+        <div class="layer-desc">AI 时代——AI 在结构上做不到的那些事</div>
+      </div>
+    </div>
+
+    <h3>满足需求的三种方式</h3>
+    <p>找到需求只是一半。怎么满足，决定你能赚到多少：</p>
+
+    <p><strong>能力</strong>——你能做这件事。但能力最不稀缺，天花板最低。<br>
+    <strong>效率</strong>——同样的能力你做得更快、更便宜、更稳。比能力稀缺。<br>
+    <strong>系统</strong>——建立一套机器替你做。你睡觉时它还在赚钱。</p>
+    <p>所有大佬本质上都是建立了一套"满足需求的系统"，然后做这个系统的主人。<em>普通人想突破天花板，必须从"靠能力"走向"靠系统"</em>。</p>
+
+    <h3>大佬的自我叙事 vs 真实商业模式</h3>
+    <p>这是一个非常重要的洞察，单独留出来——</p>
+    <div class="pullquote">
+      很多大佬的"自我叙事"和"真实赚钱机制"是分离的。<br>
+      自我叙事本身就是商业模式的一部分。
+    </div>
+    <p>清崎说自己"靠债务赚钱"——他真正赚的是卖"靠债务赚钱"的方法。<br>
+    巴菲特说自己是"价值投资者"——他相当一部分超额收益来自保险公司的浮存金（免费杠杆）。<br>
+    马斯克说自己是"工程师"——他真正赚的很大一块是政府补贴 + 资本市场叙事 + 影响力变现。</p>
+    <p>这不是说他们是骗子。<strong>自我叙事是他们用来圈住信任、调动注意力、维护品牌的工具——这个工具本身就是他们的稀缺资源</strong>。但听他们讲故事时要做两个动作：听他怎么说自己赚钱（这是产品），看他实际的现金流来自哪里（这是机制）。两者之间的差距，就是他真正的护城河。</p>
+  </div>
+</section>
+
+<!-- ========== LAYER 3: 蓝海 ========== -->
+<section class="layer" id="layer-3">
+  <div class="section-header">
+    <div class="section-num">
+      III
+      <span class="cn">三</span>
+    </div>
+    <div class="section-title-block">
+      <div class="kicker">LAYER THREE · BLUE OCEAN</div>
+      <h2 class="section-title">蓝海是什么</h2>
+      <p class="section-lead">蓝海不是某个具体的市场，是某个具体的时间窗口。所有蓝海都有保质期。</p>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <p>关于蓝海最容易犯的两个错——</p>
+    <p>第一个错：把蓝海当成"还没人做的事"。其实大部分"还没人做的事"是<em>没人做得起来</em>的事，不是蓝海。</p>
+    <p>第二个错：把蓝海等同于"创造性建设型机会"。其实蓝海有四种结构，对个人来说，最值得做的反而不是建设型。</p>
+
+    <h3>蓝海的四种结构</h3>
+
+    <div class="four-grid">
+      <div class="four-cell">
+        <div class="code">A · BUILD</div>
+        <div class="name">建设型</div>
+        <div class="desc">某个事件解除瓶颈，需要建设全新供给。技术驱动、平台型、大投入。</div>
+        <div class="example">移动支付让外卖能做；AI 让个性化服务成本暴跌</div>
+      </div>
+      <div class="four-cell highlight">
+        <div class="code">B · ARBITRAGE</div>
+        <div class="name">套利型</div>
+        <div class="desc">利用既存的差异——信息差、地区差、时间差、规则差、成本差。小成本、可快速验证。</div>
+        <div class="example">跨境代购；AI 工具搬运；信息差咨询；早期 ChatGPT 帮人开账户</div>
+      </div>
+      <div class="four-cell highlight">
+        <div class="code">C · FOLLOW</div>
+        <div class="name">跟随型</div>
+        <div class="desc">别人开辟了赛道，你做其中的小生态。不需要原创，需要眼力和速度。</div>
+        <div class="example">iPhone 之后做配件；抖音之后做素材；AI 之后做提示词工具/教程</div>
+      </div>
+      <div class="four-cell">
+        <div class="code">D · REMAKE</div>
+        <div class="name">重做型</div>
+        <div class="desc">古老需求长期被烂方式满足。需要耐心和执行力，中等投入。</div>
+        <div class="example">搬家品牌化；理发去推销化；AI 重做客服</div>
+      </div>
+    </div>
+
+    <p>对一个"不打算抢大头、只想跟着吃一小块"的人来说——<strong>B 套利型和 C 跟随型才是主场</strong>。A 是大玩家的游戏。D 是中等玩家的游戏。</p>
+
+    <h3>蓝海识别的静态四维</h3>
+    <p>判断一个机会"是不是有商业可能"，看四个静态维度：</p>
+
+    <div class="layered-list">
+      <div class="layered-item">
+        <div class="layer-num">维 度 1</div>
+        <div class="layer-name">需求已被验证</div>
+        <div class="layer-desc">有付费证据，有 workaround 痕迹，付费用户主动表达不满</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">维 度 2</div>
+        <div class="layer-name">供给明确烂</div>
+        <div class="layer-desc">没产品级供给只有 workaround，或现有产品老化、套壳、只服务大客户</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">维 度 3</div>
+        <div class="layer-name">成交路径成立</div>
+        <div class="layer-desc">客单价能覆盖获客成本，决策周期可承受，有复购/转介机制</div>
+      </div>
+      <div class="layered-item">
+        <div class="layer-num">维 度 4</div>
+        <div class="layer-name">商业闭环已验证</div>
+        <div class="layer-desc">有人在类似市场赚到过钱，但龙头不能太强吃透整个空间</div>
+      </div>
+    </div>
+
+    <h3>蓝海识别的动态三维</h3>
+    <p>静态四维只能告诉你"这是个有商业可能的市场"。但有商业可能 ≠ 是蓝海。区分蓝海的是这三个动态维度——</p>
+
+    <h4>1. 杠杆点 / 瓶颈解除事件</h4>
+    <p>过去 12-24 个月内，有什么具体事件把原本被卡住的瓶颈解除了？必须具体可指——不是"AI 在发展"，是"GPT-3.5 让 X 成本从 $A 降到 $B"。</p>
+    <div class="pullquote">
+      没有可指认的瓶颈解除事件，几乎不可能有蓝海。<br>
+      这是整套方法论里最严格的一条。
+    </div>
+
+    <h4>2. 物理墙 / 在位选手为什么不接</h4>
+    <p>本土选手、龙头、大机构为什么不做这块？真物理墙必须是结构性的——路径依赖、组织错配、监管限制、客单价不经济、文化阻力。<br>
+    如果只是"他们还没想到"——这是窗口极短的套利机会，不算真蓝海。</p>
+
+    <h4>3. 窗口期估算</h4>
+    <p>所有蓝海都有保质期：</p>
+    <p>• <strong>极短 3-12 个月</strong>——单一信息差，容易被复制<br>
+    • <strong>中短 1-3 年</strong>——依赖技术红利或单一杠杆事件<br>
+    • <strong>中长 3-7 年</strong>——依赖结构性瓶颈或厚物理墙<br>
+    • <strong>长 7+ 年</strong>——依赖人口结构或深度合规</p>
+
+    <h3>真正持久的蓝海公式</h3>
+
+    <div class="definition">
+      <span class="label">蓝海的最朴素配方</span>
+      <div class="formula">持续蓝海 <span class="op">=</span> 古老需求 <span class="op">+</span> 烂供给</div>
+    </div>
+
+    <p>这个公式比"找新需求"更可操作。因为新需求难找（需要洞察、运气、技术突破），而烂供给到处都是。</p>
+    <p>过去 15 年的蓝海几乎都符合：打车（路边招手 → 滴滴）、买菜（超市排队 → 美团买菜）、搬家（野蛮搬家 → 品牌搬家）、理发（推销 → 不推销的连锁）。</p>
+    <p>怎么找烂供给？看五个信号：</p>
+    <ol style="margin-left: 20px; padding-left: 8px;">
+      <li>行业用户口碑普遍很差</li>
+      <li>从业者自己都不愿意做这行</li>
+      <li>价格不透明</li>
+      <li>服务标准化程度低</li>
+      <li>入行门槛低但做得好的少</li>
+    </ol>
+    <p style="margin-top: 16px;">满足 3 条以上，这个行业的供给端就是"烂供给"，可能蕴含蓝海。</p>
+  </div>
+</section>
+
+<!-- ========== LAYER 4: 位置 ========== -->
+<section class="layer" id="layer-4">
+  <div class="section-header">
+    <div class="section-num">
+      IV
+      <span class="cn">四</span>
+    </div>
+    <div class="section-title-block">
+      <div class="kicker">LAYER FOUR · POSITION</div>
+      <h2 class="section-title">你在哪里</h2>
+      <p class="section-lead">你不是循环的旁观者，你是循环里的一个节点。你赚的钱是别人对你"未来兑付能力"的估值。</p>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <h3>AI 时代的财富公式</h3>
+    <p>纳瓦尔讲的"财富 = 专业知识 × 责任 × 杠杆"是互联网时代的公式。AI 改变了一件事——专业知识被大规模压价了。所以公式要重打：</p>
+
+    <div class="definition">
+      <span class="label">AI 时代</span>
+      <div class="formula">财富 <span class="op">=</span> 判断力 <span class="op">×</span> 责任 <span class="op">×</span> AI 杠杆 <span class="op">×</span> 锚定能力</div>
+    </div>
+
+    <p>四个维度——</p>
+    <p><strong>判断力</strong>：在不确定中做选择。专业知识被 AI 压价了，判断力才是新稀缺。<br>
+    <strong>责任</strong>：你愿意为后果背书。AI 没有可被惩罚的"自我"。<br>
+    <strong>AI 杠杆</strong>：用 AI 放大自己——不是和 AI 竞争，是骑在 AI 上。<br>
+    <strong>锚定能力</strong>：法律责任承担 + 肉身在场 + 关系网入场券——AI 在结构上做不到的具体能力。</p>
+
+    <h3>零和 vs 非零和：选择决定你的状态</h3>
+    <p>做官排位次是零和——你赢必然有人输。提供服务是非零和——你做得好不会阻止别人做得好。</p>
+    <p>两种博弈的代价完全不同：</p>
+    <p><strong>零和博弈的人</strong>：心力消耗大，关系都是工具性的，输了什么都没有，形成的"自我"充满敌意和算计。</p>
+    <p><strong>非零和博弈的人</strong>：心力是滋养的，关系是积累的，失败也有积累，形成的"自我"有创造力。</p>
+    <div class="pullquote">
+      把零和的部分压到最小，<br>
+      把非零和的部分做到最大。
+    </div>
+    <p>这不是道德选择，是状态选择。零和场里待久了的人，眼睛里看不到合作者——只看得到敌人和盟友。这种状态本身就是一种贫困。</p>
+
+    <h3>赚钱与自由的正弦关系</h3>
+    <p>这是 K 自己提出的观察，非常对——赚钱和自由不是单调正相关，是正弦曲线。</p>
+
+    <div class="sine-viz">
+      <svg viewBox="0 0 800 240" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="curveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#A4382C" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#A4382C" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#A4382C" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+        <!-- baseline -->
+        <line x1="40" y1="200" x2="760" y2="200" stroke="#C9BEAE" stroke-width="1"/>
+        <line x1="40" y1="40" x2="40" y2="200" stroke="#C9BEAE" stroke-width="1"/>
+        
+        <!-- sine curve -->
+        <path d="M 40 180 Q 200 40, 400 40 Q 600 40, 760 180" 
+              fill="none" 
+              stroke="url(#curveGrad)" 
+              stroke-width="3"
+              stroke-linecap="round"/>
+        
+        <!-- peak marker -->
+        <circle cx="400" cy="40" r="6" fill="#A4382C"/>
+        <line x1="400" y1="46" x2="400" y2="200" stroke="#A4382C" stroke-width="1" stroke-dasharray="3,4" opacity="0.5"/>
+        
+        <!-- start and end -->
+        <circle cx="40" cy="180" r="4" fill="#1A1814"/>
+        <circle cx="760" cy="180" r="4" fill="#1A1814"/>
+        
+        <!-- labels -->
+        <text x="40" y="225" fill="#7A6E5C" font-size="11" font-family="JetBrains Mono">没钱</text>
+        <text x="380" y="25" fill="#A4382C" font-size="12" font-family="JetBrains Mono" letter-spacing="0.1em">甜蜜点</text>
+        <text x="720" y="225" fill="#7A6E5C" font-size="11" font-family="JetBrains Mono">大富</text>
+        <text x="15" y="48" fill="#7A6E5C" font-size="10" font-family="JetBrains Mono" transform="rotate(-90, 15, 48)">自由</text>
+      </svg>
+      <div class="sine-labels">
+        <span>财务困境</span>
+        <span>财务自由临界点</span>
+        <span>被钱反噬</span>
+      </div>
+    </div>
+
+    <p>起点：没钱不自由。<br>
+    上升段：赚第一桶金，自由度快速上升。<br>
+    <strong>甜蜜点</strong>：财务自由了，但还没大到被反噬。这个点的具体数字因人而异，但每个人都有自己的"够"。<br>
+    下降段：你雇人、拿投资、签合约、被需要、被盯上——账户上钱在增加，选择空间在缩小。<br>
+    深谷：你被你的体系绑死。马云、李佳琦、王健林、扎克伯格——都在这一段。</p>
+    <div class="pullquote">
+      深谷阶段的自由度，<br>
+      有时候比起点还低。
+    </div>
+    <p>起点的人没钱但有时间，没地位但有匿名性。<br>
+    深谷的人有钱但没时间，有地位但没匿名性。</p>
+
+    <h3>真实自由的公式</h3>
+
+    <div class="definition">
+      <span class="label">不是钱越多越自由</span>
+      <div class="formula">真实自由 <span class="op">=</span> 财富 <span class="op">×</span> 可停止性 <span class="op">×</span> 不被需要度 <span class="op">×</span> 匿名性</div>
+    </div>
+
+    <p>最自由的人，不是钱最多的人。是<strong>想做就做、想停就停</strong>的人。</p>
+    <p>每次放大都问一遍：这次放大让我的真实自由是增加还是减少？过了甜蜜点继续放大，是在给自己加枷锁。</p>
+  </div>
+</section>
+
+<!-- ========== LAYER 5: 心法 ========== -->
+<section class="layer" id="layer-5">
+  <div class="section-header">
+    <div class="section-num">
+      V
+      <span class="cn">五</span>
+    </div>
+    <div class="section-title-block">
+      <div class="kicker">LAYER FIVE · HEURISTICS</div>
+      <h2 class="section-title">五条心法</h2>
+      <p class="section-lead">不打开 Project，看到机会时直接用这五条问自己。装在脑子里的判断，比任何文档都快。</p>
+    </div>
+  </div>
+
+  <div class="section-body">
+
+    <p style="font-size: 19px; color: var(--ink-soft); font-style: italic; margin-bottom: 8px;">前面四层是知识。这一层是真正能在日常用上的。</p>
+
+    <div class="principles">
+      <div class="principle">
+        <div class="p-text">
+          <h4>这事让我看见自己变强还是变弱？</h4>
+          <p>你最早写在 Project Instructions 里的根本判断。不变。所有的赚钱方式如果让你变弱——精神、关系、健康、自我认知——再多的钱也是亏的。</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="p-text">
+          <h4>我赚的是哪种钱？最近做过这种钱吗？</h4>
+          <p>从八种赚钱模式里选 1-2 种。如果"主要赚 X 钱"但"最近没做过 X 钱的事"——不是不能做，是心里要有数：你在新赛道上，有学习曲线和失败成本。</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="p-text">
+          <h4>我用 100-1000 块能测什么？</h4>
+          <p>答得出来 → 这是可以低成本试的事，先试。<br>答不出来 → 这是要大投入才能验证的事，你不是大玩家就别上。</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="p-text">
+          <h4>这是水面上的事，还是水面下的事？</h4>
+          <p>水面上（产品/技术/营销/公开规则）→ Claude 有用，框架有用。<br>水面下（关系/人情/潜规则/不能写下来的事）→ Claude 没用，靠你的直觉和人脉。</p>
+        </div>
+      </div>
+      <div class="principle">
+        <div class="p-text">
+          <h4>三个月后失败最可能的原因？能承受吗？</h4>
+          <p>关键不是"会不会失败"，是"失败的成本"。<br>答得上来 + 能承受 → 试。<br>答不上来 → 没真懂，先调研再决定。</p>
+        </div>
+      </div>
+    </div>
+
+    <p>五条全部答得出 + 没明显红灯 → 直接花 100-1000 块测。<br>
+    卡在某条上 → 找 Claude 协同。<br>
+    1 个以上明显红灯 → 停。</p>
+  </div>
+</section>
+
+<!-- ========== CODA ========== -->
+<section class="coda" id="coda">
+  <div class="coda-inner">
+    <h2>合<span class="accent"> · </span>撤回</h2>
+    <p>这份地图是给你看的。但用到最后，它要能被撤回。</p>
+    <p>如果你发现自己在用这套框架时，为了"满足维度"而扭曲对市场的真实理解——硬找一个瓶颈解除事件、硬编一个物理墙、硬估一个窗口期——<strong>那就是框架在反噬你</strong>。</p>
+    <p>这时候停下来，回到对市场最朴素的观察，问自己：用户为什么会付钱给我？</p>
+    <p>真正的判断不在框架里，在做的过程里。100 块的真实测试胜过 100 小时的推演。框架最多帮你避开明显大坑，剩下的<strong>必须靠你直接去做</strong>。</p>
+    <p>能用，也能撤。<br>看见月亮之后，没必要继续盯着指月亮的手指。</p>
+    <div class="coda-mark">
+      <span>FIN · 知识地图 v1.0 · 2026.05</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('section.layer, .coda').forEach(el => {
+  el.classList.add('reveal');
+  observer.observe(el);
+});
+
+// active nav
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-rail a');
+
+const navObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.4 });
+
+sections.forEach(s => navObserver.observe(s));
+</script>
+
+</body>
+</html>
