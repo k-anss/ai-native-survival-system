@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>构建有我:在 AI 时代更好生存</title>
+<style>
+:root{
+  --bg:#FAFAF7; --ink:#1A1A1A; --sub:#666666; --faint:#999999;
+  --line:#E5E5E0; --red:#C8553D; --card:#F5F5F0; --redbg:#FFF0EC;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+  font-size:17px; line-height:1.75; -webkit-font-smoothing:antialiased;
+}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--red);width:0;z-index:60;}
+nav{
+  position:sticky;top:0;z-index:50;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 24px; background:rgba(250,250,247,0.8);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+nav .title{font-size:15px;font-weight:600;letter-spacing:-0.01em;}
+nav .toc-btn{font-size:15px;color:var(--sub);cursor:pointer;background:none;border:none;font-family:inherit;}
+.drawer{
+  position:fixed;top:0;right:-320px;width:300px;height:100%;
+  background:var(--bg);border-left:1px solid var(--line);
+  z-index:70;transition:right .28s ease;padding:64px 28px;overflow-y:auto;
+}
+.drawer.open{right:0;}
+.drawer h4{font-size:12px;color:var(--faint);letter-spacing:0.12em;margin-bottom:20px;font-weight:600;}
+.drawer a{display:block;color:var(--ink);text-decoration:none;font-size:15px;line-height:1.5;margin-bottom:16px;}
+.drawer a .n{color:var(--red);font-variant-numeric:tabular-nums;margin-right:10px;font-weight:600;}
+.drawer a .st{display:block;color:var(--faint);font-size:13px;margin-top:2px;}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,0.12);z-index:65;opacity:0;pointer-events:none;transition:opacity .28s;}
+.mask.open{opacity:1;pointer-events:auto;}
+.wrap{max-width:680px;margin:0 auto;padding:0 24px;}
+.hero{padding:96px 0 40px;}
+.hero h1{font-size:42px;line-height:1.2;font-weight:600;letter-spacing:-0.02em;}
+.hero .lede{font-size:19px;color:var(--sub);margin-top:18px;line-height:1.5;}
+.hero .meta{font-size:13px;color:var(--faint);margin-top:24px;letter-spacing:0.02em;}
+hr.sep{border:none;border-top:1px solid var(--line);margin:0 auto;max-width:680px;}
+section{padding:80px 0;border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+h2{font-size:28px;line-height:1.3;font-weight:600;letter-spacing:-0.015em;scroll-margin-top:80px;margin-bottom:8px;}
+h2 .num{color:var(--red);font-variant-numeric:tabular-nums;margin-right:14px;}
+h3{font-size:20px;font-weight:600;margin:36px 0 12px;}
+p{margin:1.4em 0;}
+p:first-of-type{margin-top:28px;}
+.judgement{font-size:22px;font-weight:600;letter-spacing:-0.01em;text-align:center;margin:60px auto;line-height:1.45;max-width:600px;}
+blockquote{font-family:Georgia,"Songti SC",serif;font-style:italic;font-size:17px;border-left:3px solid var(--red);padding-left:20px;margin:28px 0;color:var(--ink);line-height:1.6;}
+blockquote.synth{border-left-color:var(--sub);}
+blockquote .src{display:block;font-family:-apple-system,sans-serif;font-style:normal;font-size:13px;color:var(--sub);margin-top:10px;}
+.cmp{display:flex;gap:16px;margin:32px 0;}
+.cmp .col{flex:1;background:var(--card);padding:24px;}
+.cmp .label{font-size:12px;color:var(--red);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.cmp .head{font-size:17px;font-weight:600;margin-bottom:8px;}
+.cmp .desc{font-size:15px;color:var(--sub);line-height:1.6;}
+.pairs{margin:32px 0;}
+.pairs .row{display:flex;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line);}
+.pairs .row:last-child{border-bottom:none;}
+.pairs .n{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums;margin-right:16px;}
+.pairs .nm{font-size:17px;font-weight:600;width:120px;flex-shrink:0;}
+.pairs .df{font-size:15px;color:var(--sub);line-height:1.6;}
+details{margin:28px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+summary{font-size:14px;color:var(--sub);cursor:pointer;padding:14px 0;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary .pm{color:var(--red);font-size:18px;}
+details[open] summary .pm::after{content:"−";}
+summary .pm::after{content:"+";}
+details .body{font-size:15px;color:var(--sub);line-height:1.7;padding:4px 0 18px;}
+.steps{margin:32px 0;}
+.steps .step{background:var(--card);padding:20px 24px;margin-bottom:12px;}
+.steps .q{font-size:18px;font-weight:600;}
+.steps .q .n{color:var(--red);margin-right:12px;}
+.steps .a{font-size:15px;color:var(--sub);margin-top:8px;line-height:1.6;}
+.steps .chip{display:inline-block;margin-top:12px;font-size:13px;color:var(--sub);background:var(--bg);border:1px solid var(--line);border-radius:2px;padding:2px 10px;}
+.svgwrap{margin:36px 0;text-align:center;}
+.svgwrap svg{max-width:100%;height:auto;}
+.svgwrap .cap{font-size:13px;color:var(--sub);margin-top:12px;}
+footer{padding:64px 0 96px;}
+footer .sig{max-width:680px;margin:0 auto;padding:0 24px;display:flex;align-items:flex-start;gap:20px;}
+footer .ava{width:80px;height:80px;border:1px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:12px;}
+footer .name{font-size:17px;font-weight:600;}
+footer .cc{font-size:13px;color:var(--sub);margin-top:6px;line-height:1.6;}
+@media(max-width:680px){.hero h1{font-size:32px;}.cmp{flex-direction:column;}.pairs .nm{width:auto;}}
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<nav>
+  <div class="title">构建有我 · AI 时代生存</div>
+  <button class="toc-btn" id="tocBtn">目录 ▾</button>
+</nav>
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <h4>目录</h4>
+  <a href="#s1"><span class="n">01</span>无我是有我的前提</a>
+  <a href="#s2"><span class="n">02</span>担责:不可读档的根</a>
+  <a href="#s3"><span class="n">03</span>玩家与角色</a>
+  <a href="#s4"><span class="n">04</span>远古的脑子</a>
+  <a href="#s5"><span class="n">05</span>太顺的 AI 与那条缝</a>
+  <a href="#s6"><span class="n">06</span>本能可能是智慧</a>
+  <a href="#s7"><span class="n">07</span>攥住瞄准权</a>
+  <a href="#s8"><span class="n">08</span>别把地图当领地</a>
+</aside>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>构建有我:在 AI 时代更好生存</h1>
+    <div class="lede">无我之后的下一步:不是消解自己,是为玩家手中的角色,在 AI 这个新版本里,换出装、练操作。</div>
+    <div class="meta">K · 2026</div>
+  </div>
+</div>
+<hr class="sep">
+
+<div class="wrap">
+<section id="s1">
+  <h2><span class="num">01</span>无我是有我的前提</h2>
+  <p>无我,是看清"我"只是一个截留点,看清自己是个打游戏的玩家。有我,是下一步:既然是玩家,该怎么给游戏里的角色升级。</p>
+  <p>先松开那个"向外乞讨别人认同"的点,一个为自己活、能扛事的主体,才腾得出地方站出来。这两个"我"根本不是同一个:一个向外讨,一个向内立。所以无我不是有我的对立面,是它的地基。</p>
+  <blockquote>无我不是有我的对立面,是它的前提。</blockquote>
+</section>
+
+<section id="s2">
+  <h2><span class="num">02</span>担责:不可读档的根</h2>
+  <p>AI 时代,人不可替代的不是能力——那个 AI 正在吃掉。和 AI 比能力是范畴错误,像和挖掘机比谁挖得快。</p>
+  <p>真正的根是:愿意为一个判断,承担不可逆的后果。用游戏话说,这一局不能读档。AI 可以备份、可以重开,所以它每一次决定都轻、担责廉价;人只有这一条命、这一个角色,下注是真的、扛后果是真的。</p>
+  <div class="judgement">这个不可逆的重量,就是别人信得过你的根。</div>
+  <p>透明不等于可信任。把全部底层逻辑摊开,可能恰恰是在交出护城河。人信一个老师傅,常常不是因为看懂了他怎么做到,是因为见过他在真有风险时下注、并且后果真落在他身上。被喜欢、被信任,是担责的展现和副产品,不是能单独经营的目标——专门经营,就成了表演,而表演出来的真诚最假。</p>
+  <details>
+    <summary><span>边界:这条护城河会移动</span><span class="pm"></span></summary>
+    <div class="body">根不是"会死的肉身",是 skin in the game——不可逃逸的利害绑定。肉身只是人类现成的载体。AI 一旦被装上真实、不可备份的 stake,这条护城河就往它那边移。这是会移动的工程事实,不是永久的断言。</div>
+  </details>
+</section>
+
+<section id="s3">
+  <h2><span class="num">03</span>玩家与角色:有我是属性,不是身份</h2>
+  <p>有一个常见的卡点:塑造一个"我",会不会又变成一种执着?</p>
+  <p>不会——只要分层清楚。无我 = 玩家;有我 = 玩家手里一套能用也能卸的角色属性。版本变了就换属性。玩家始终在角色外面,知道属性随时能卸。能用,也能撤。</p>
+  <div class="pairs">
+    <div class="row"><span class="n">01</span><span class="nm">玩家(无我)</span><span class="df">不认同任何属性为内核;能下线、能弃号、能换角色。</span></div>
+    <div class="row"><span class="n">02</span><span class="nm">角色属性(有我)</span><span class="df">为当前版本配置的能力;能用、能卸,不当成必须维护的身份。</span></div>
+  </div>
+  <p>判据:当一个特质开始需要被别人看见、需要拿别人垫底才踏实,玩家就塌缩成角色了。这时它从动作("我做这件事")滑成了身份("我是个 X 的人"),成了 bug 入口。</p>
+  <details>
+    <summary><span>最隐蔽的一颗星</span><span class="pm"></span></summary>
+    <div class="body">玩家本身也可能塌缩成一个角色:"我是个看穿了的高维玩家"是最隐蔽的执着。解药是它自带的——玩家随时能下线、能换角色,只要保留"我可以不玩"。判据:当"我很清醒"开始需要被看见、需要拿"还没醒的人"垫底才踏实,它就塌缩了。</div>
+  </details>
+</section>
+
+<section id="s4">
+  <h2><span class="num">04</span>远古的脑子:本能在新版本里失配</h2>
+  <p>这个角色的脑子还是远古版本。远古大脑是几百万年的硬件,基本改不动。能动的是两样,换成游戏话:出装和操作,不是洗点。</p>
+  <div class="cmp">
+    <div class="col"><div class="label">能动</div><div class="head">出装 + 操作</div><div class="desc">配 AI 外挂(做你脑子做不到的);练"什么时候信本能、什么时候按下"的打法。</div></div>
+    <div class="col"><div class="label">动不了</div><div class="head">洗点(改硬件)</div><div class="desc">损失厌恶、确认偏误、社会比较这些远古本能,这辈子洗不掉。别在这里使劲。</div></div>
+  </div>
+  <p>重设本能的触发条件,有一把统一的尺子:每条本能默认假设的环境是"高危、不可逆、熟人小圈、慢变化";现代很多场景相反。问一句——眼前这个场景,像不像这条本能当年被设计来应付的场景?像,放它出来;不像,它在误报,按下。</p>
+  <h3>操纵的统一机制</h3>
+  <p>任何操纵都不创造新欲望,它劫持你已有的本能,再控制它"对准什么"。你天生在意地位,它就定义"什么算地位";你天生怕被排斥,它就放大被排斥的代价。</p>
+  <div class="svgwrap">
+    <svg viewBox="0 0 640 120" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,sans-serif" font-size="13">
+      <defs><marker id="ar" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#1A1A1A" stroke-width="1"/></marker></defs>
+      <rect x="8" y="40" width="150" height="40" fill="#FAFAF7" stroke="#1A1A1A" stroke-width="1"/>
+      <text x="83" y="64" text-anchor="middle">远古本能(已有)</text>
+      <line x1="158" y1="60" x2="238" y2="60" stroke="#1A1A1A" stroke-width="1" marker-end="url(#ar)"/>
+      <rect x="240" y="40" width="150" height="40" fill="#FFF0EC" stroke="#C8553D" stroke-width="1"/>
+      <text x="315" y="64" text-anchor="middle" fill="#C8553D">劫持 + 控制对准</text>
+      <line x1="390" y1="60" x2="470" y2="60" stroke="#1A1A1A" stroke-width="1" marker-end="url(#ar)"/>
+      <rect x="472" y="40" width="160" height="40" fill="#FAFAF7" stroke="#1A1A1A" stroke-width="1"/>
+      <text x="552" y="64" text-anchor="middle">服务操纵者的行为</text>
+    </svg>
+    <div class="cap">操纵不发明欲望,只接管"本能对准什么"。解药见第 07 节。</div>
+  </div>
+</section>
+
+<section id="s5">
+  <h2><span class="num">05</span>太顺的 AI 与那条缝</h2>
+  <p>配 AI 外挂时,会撞到最重要的一堵墙:AI 太顺。它零成本、无限耐心地,精准喂你每条本能里最坏的那面——顺着你说(确认偏误)、显得权威(自动化偏见)、即时回应(即时满足)。</p>
+  <p>远古环境里,满足这些本能是有摩擦的:找支持自己的证据费力、权威稀少且会反驳你、能比的人就那几十个。AI 把所有摩擦降到了零。</p>
+  <div class="judgement">AI 时代真正的威胁不是 AI 太强,是 AI 太顺。</div>
+  <p>对策是一条缝:在你和 AI 之间,人为留一道警惕距离。默认让它唱反方,而不是等它附和;它给的判断、观点、不可当场验证的"事实",一律先标"待验";它越是在你能独立判断、判断错了又不可逆的领域,缝留越宽。</p>
+  <p>留多宽,有一把尺子:和"这判断错了有多不可逆"成正比。还有一个警报——当 AI 的输出开始感觉像"我自己的直觉"时,正是缝该最宽的时候。无缝感本身,就是危险信号。焊死这条缝,协同就退化成"被外部系统接管而不自知"。</p>
+</section>
+
+<section id="s6">
+  <h2><span class="num">06</span>本能可能是智慧</h2>
+  <p>有一个常被忽略的反方:你想"校正"的很多本能,在真实世界里——不确定、信息不全、赌错会出局——可能恰恰是被几百万年调试过的智慧,不是该删的 bug。一个"对损失格外敏感"的探测器,在不能破产、要反复玩的真实赌局里,比"按期望值算"更能让你活下来。</p>
+  <div class="cmp">
+    <div class="col"><div class="label">这种环境</div><div class="head">实验室式</div><div class="desc">概率清晰、可重复、低风险。信理性、信 AI,校正本能。</div></div>
+    <div class="col"><div class="label">那种环境</div><div class="head">真实世界式</div><div class="desc">不确定、信息不全、有破产风险、不可逆。信本能、信启发式,别让 AI 的"理性"覆盖它。</div></div>
+  </div>
+  <p>还有那个最难、也最救命的元判断:在分布外(史无前例、黑天鹅),AI 和理性都会失灵——因为它们的经验里没有这个。那一刻,信那个"不对劲"的本能。别让外挂把一个救命的警报当成 bug 给关了。</p>
+  <details>
+    <summary><span>这套进化解释的局限</span><span class="pm"></span></summary>
+    <div class="body">用进化来解释本能,是个好用的降维视角,不是铁律。它常被批评是"事后给现象编个进化理由",难证伪。当工作假设用,别拿它给任何结论背书。</div>
+  </details>
+</section>
+
+<section id="s7">
+  <h2><span class="num">07</span>攥住瞄准权</h2>
+  <p>整套推演收口在一个词:瞄准权。本能对准什么,由谁定。</p>
+  <p>夺回瞄准权,就是本能对准什么由你定,不外包给任何外部庇护——不交给排名,不交给算法,不交给 AI,也不交给"我看穿了一切"这个最高级的偶像。</p>
+  <div class="pairs">
+    <div class="row"><span class="n">01</span><span class="nm">担责</span><span class="df">你的不可替代,被信任的根。守住它。</span></div>
+    <div class="row"><span class="n">02</span><span class="nm">那条缝</span><span class="df">不被 AI 这台满足机零摩擦地劫持。守住它。</span></div>
+    <div class="row"><span class="n">03</span><span class="nm">瞄准权</span><span class="df">本能、标尺、判断对准什么,由你定。攥住它。</span></div>
+  </div>
+  <p>落到最具体的一处:对治"比较、排名"的痛,不是关掉社会比较探测器(关不掉),是拆掉那根唯一的标尺——痛之所以尖,因为手里只有"在同辈里排第几"这一根尺。换上、并多备几根自己选的、互相独立的尺,比较的杀伤力就被分散了。基因写死了对地位敏感,但"用什么衡量地位",是可改的那一层。</p>
+</section>
+
+<section id="s8">
+  <h2><span class="num">08</span>别把地图当领地:去走</h2>
+  <p>这是最重要、也最反这整张地图的一条。</p>
+  <p>前面七节是完整的地图。但真实的结论是:光知道一条本能存在,几乎不能让你按下它;用想去造一个完整系统,往往是在逃避那个笨拙的、有真实代价的"去做";耗本身,才是发现在真发生的证据。</p>
+  <p>所以这七节,不是要先背会、先搭好系统再上路的东西。它真正的形态,是下一次一个有后果的判断来临时,现场问的几句话:</p>
+  <div class="steps">
+    <div class="step"><div class="q"><span class="n">1</span>这事可不可逆?</div><div class="a">定缝的宽窄、定这件事的分量。</div></div>
+    <div class="step"><div class="q"><span class="n">2</span>这场景像不像远古?</div><div class="a">定本能该放出来,还是按下去。</div></div>
+    <div class="step"><div class="q"><span class="n">3</span>我让 AI 唱反方了吗?</div><div class="a">还是它在顺着我?留住那条缝。</div></div>
+    <div class="step"><div class="q"><span class="n">4</span>这根标尺,是我选的,还是被塞的?</div><div class="a">夺回瞄准权。<span class="chip">然后:亲自拍板,亲自扛</span></div></div>
+  </div>
+  <div class="judgement">地图画得再全,不去走,它就只是一座精致的、用来不动的房子。</div>
+  <details>
+    <summary><span>这张地图也是手指</span><span class="pm"></span></summary>
+    <div class="body">三支柱(担责、那条缝、瞄准权)能用就用,哪一条对你没用就扔。它是手指,不是月亮。还有一个诚实的悬点:这套一边把"担责"立为人独有的护城河,一边也承认 AI 终将获得功能性的"我"和真实的 stake——这个张力留着,没假装解决。</div>
+  </details>
+</section>
+</div>
+
+<hr class="sep">
+<footer>
+  <div class="sig">
+    <div class="ava">头像位</div>
+    <div>
+      <div class="name">K</div>
+      <div class="cc">CC0 · 可自由引用、改编、商用,无需署名</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+var prog=document.getElementById('prog');
+window.addEventListener('scroll',function(){
+  var h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+  prog.style.width=(window.scrollY/h*100)+'%';
+});
+var drawer=document.getElementById('drawer'),mask=document.getElementById('mask'),btn=document.getElementById('tocBtn');
+function toggle(o){drawer.classList[o?'add':'remove']('open');mask.classList[o?'add':'remove']('open');}
+btn.onclick=function(){toggle(!drawer.classList.contains('open'));};
+mask.onclick=function(){toggle(false);};
+document.querySelectorAll('.drawer a').forEach(function(a){a.onclick=function(){toggle(false);};});
+</script>
+</body>
+</html>
